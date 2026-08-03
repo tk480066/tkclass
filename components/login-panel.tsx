@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import { BookOpenCheck, CircleUserRound, GraduationCap, MonitorPlay, ShieldCheck } from "lucide-react";
+import { BookOpenCheck, CircleUserRound, GraduationCap, MonitorPlay, School, ShieldCheck } from "lucide-react";
 import { studentSignIn, teacherSignIn, type AuthActionState } from "@/app/actions";
 import { BrandMark } from "@/components/brand-mark";
 import { SubmitButton } from "@/components/submit-button";

@@ -64,7 +64,7 @@ a { color: inherit; text-decoration: none; }
 .brand-copy strong { font-size: 1rem; font-weight: 900; letter-spacing: -.03em; }
 .brand-copy small { margin-top: .22rem; color: var(--muted); font-size: .67rem; font-weight: 650; }
 
-.site-page { position: relative; min-height: 100vh; overflow: hidden; background: var(--surface-soft); }
+.site-page { position: relative; min-height: 100vh; padding-top: 6.9rem; overflow-x: clip; overflow-y: visible; background: var(--surface-soft); }
 .site-page::before {
   content: ""; position: fixed; inset: 0; pointer-events: none; opacity: .26;
   background-image: radial-gradient(rgba(63, 126, 190, .25) .7px, transparent .7px); background-size: 26px 26px;
@@ -75,10 +75,11 @@ a { color: inherit; text-decoration: none; }
 .site-ambient-two { width: 23rem; height: 23rem; right: -9rem; bottom: 8rem; background: radial-gradient(circle, #8bbfff, transparent 68%); animation-delay: -4s; }
 
 .floating-header {
-  position: sticky; top: 1rem; z-index: 50; display: flex; align-items: center; justify-content: space-between; gap: 1.2rem;
-  width: min(1180px, calc(100% - 2rem)); min-height: 5.2rem; margin: 1rem auto 0; padding: .75rem 1rem .75rem 1.15rem;
-  border: 1px solid rgba(184, 208, 235, .7); border-radius: 1.35rem; background: color-mix(in srgb, var(--surface) 92%, transparent);
-  box-shadow: 0 16px 40px rgba(29, 75, 121, .14); backdrop-filter: blur(22px);
+  position: fixed; top: 1rem; left: 50%; z-index: 1000; display: flex; align-items: center; justify-content: space-between; gap: 1.2rem;
+  width: min(1180px, calc(100% - 2rem)); min-height: 5.2rem; margin: 0; padding: .75rem 1rem .75rem 1.15rem;
+  border: 1px solid rgba(184, 208, 235, .78); border-radius: 1.35rem; background: color-mix(in srgb, var(--surface) 92%, transparent);
+  box-shadow: 0 16px 40px rgba(29, 75, 121, .14); backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px);
+  transform: translateX(-50%); will-change: transform;
 }
 .header-brand { flex: 0 0 auto; }
 .main-nav { display: flex; align-items: center; justify-content: center; gap: .25rem; }
@@ -358,7 +359,8 @@ a { color: inherit; text-decoration: none; }
 }
 
 @media (max-width: 760px) {
-  .floating-header { top: .5rem; width: calc(100% - 1rem); margin-top: .5rem; border-radius: 1.05rem; }
+  .site-page { padding-top: 6.2rem; }
+  .floating-header { top: .5rem; width: calc(100% - 1rem); margin: 0; border-radius: 1.05rem; }
   .header-brand .brand-copy small { display: none; }
   .admin-button { padding: .78rem .85rem; }
   .hero-section { min-height: auto; padding: 3.2rem 1.2rem 4rem; }

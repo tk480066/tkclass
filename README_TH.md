@@ -1,3 +1,9 @@
+# TK Mooc Phase 2 — ชั้นเรียนและบทเรียน
+
+โปรดเริ่มจากคู่มือ [README_PHASE2_TH.md](README_PHASE2_TH.md) สำหรับการติดตั้ง Migration, Storage, ข้อมูลตัวอย่าง และการทดสอบ Phase 2
+
+---
+
 # TK Mooc Phase 1 — ระบบพื้นฐาน
 
 > เวอร์ชัน 1.0.3 — ปรับ UI ใหม่ตามแนวทาง Mobile App Showcase พร้อม Motion & Animation Design

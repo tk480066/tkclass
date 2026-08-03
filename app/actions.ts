@@ -35,6 +35,7 @@ export async function teacherSignIn(
   const { data, error } = await supabase.auth.signInWithPassword(parsed.data);
 
   if (error || !data.user) {
+    console.error("Teacher sign-in failed:", error?.message ?? "No user returned");
     return { error: "อีเมลหรือรหัสผ่านไม่ถูกต้อง" };
   }
 
@@ -73,6 +74,7 @@ export async function studentSignIn(
   });
 
   if (error || !data.user) {
+    console.error("Student sign-in failed:", error?.message ?? "No user returned");
     return { error: "รหัสนักเรียนหรือ PIN ไม่ถูกต้อง" };
   }
 

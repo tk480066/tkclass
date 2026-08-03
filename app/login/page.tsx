@@ -7,9 +7,9 @@ export const metadata: Metadata = { title: "เข้าสู่ระบบ" }
 
 export default function LoginPage() {
   return (
-    <main className="min-h-screen px-5 py-8 sm:px-8 lg:grid lg:place-items-center">
-      <div className="mx-auto w-full max-w-5xl">
-        <Link href="/" className="mb-5 inline-flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-blue-700">
+    <main className="auth-page">
+      <div className="auth-container">
+        <Link href="/" className="auth-back-link">
           <ArrowLeft size={17} /> กลับหน้าหลัก
         </Link>
         <LoginPanel />

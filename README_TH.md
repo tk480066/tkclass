@@ -1,5 +1,19 @@
 # TK Mooc Phase 1 — ระบบพื้นฐาน
 
+> เวอร์ชัน 1.0.3 — ปรับ UI ใหม่ตามแนวทาง Mobile App Showcase พร้อม Motion & Animation Design
+
+## การปรับปรุง UI เวอร์ชัน 1.0.3
+
+- หน้าแรกแบบกรอบเว็บไซต์ทรงโค้งบนพื้นหลังไล่สีม่วง–น้ำเงิน
+- Hero Section แบบ Gradient พร้อม Dashboard Mockup ที่สร้างด้วย HTML/CSS
+- Section สลับภาพประกอบและข้อความตามแนวทางไฟล์ตัวอย่าง
+- หน้า Login, Teacher Dashboard, Student Dashboard และหน้าไม่มีสิทธิ์ในธีมเดียวกัน
+- Scroll reveal, floating device, animated chart, shimmer button และ hover interaction
+- รองรับ `prefers-reduced-motion` สำหรับผู้ใช้ที่ต้องการลดการเคลื่อนไหว
+- Responsive สำหรับ Desktop, Tablet และ Smartphone
+
+ดูรายละเอียดไฟล์ที่แก้ไขและวิธีอัปเดตใน `UI_UPDATE_TH.md`
+
 Starter Project สำหรับพัฒนา TK Mooc ด้วย Next.js, TypeScript, Tailwind CSS, Supabase และ Vercel
 
 ## สิ่งที่มีในระยะที่ 1
@@ -353,3 +367,32 @@ TK_Mooc_Phase1/
 - บทเรียนและ Lesson Blocks
 - ความก้าวหน้าการเรียน
 - หน้ารายวิชาของนักเรียน
+
+---
+
+## แก้ปัญหาเข้าสู่ระบบแจ้งว่ารหัสผ่านไม่ถูกต้อง (v1.0.2)
+
+เวอร์ชันก่อนหน้า หากบัญชีตัวอย่างมีอยู่ใน Supabase Auth แล้ว คำสั่ง `npm run create-demo-users` จะไม่เปลี่ยนรหัสผ่านของบัญชีเดิม แต่ยังพิมพ์รหัสผ่านตัวอย่างออกมา ทำให้รหัสที่แสดงอาจไม่ตรงกับรหัสจริง
+
+เวอร์ชัน 1.0.2 แก้ไขให้คำสั่งนี้สร้างบัญชีใหม่หรือรีเซ็ตรหัสผ่านบัญชีเดิมให้ตรงกันทุกครั้ง:
+
+```bash
+npm run create-demo-users
+npm run verify-demo-login
+```
+
+บัญชีครู:
+
+```text
+teacher@tkmooc.local
+TKMOOC@1234
+```
+
+บัญชีนักเรียน:
+
+```text
+10001
+123456
+```
+
+หาก `verify-demo-login` ไม่ผ่าน ข้อความใน Terminal จะแสดงสาเหตุจริงจาก Supabase เช่น Invalid login credentials, Email logins are disabled หรือ Password should be at least ... characters

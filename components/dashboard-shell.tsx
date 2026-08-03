@@ -1,6 +1,14 @@
 import Link from "next/link";
-import { BookOpen, LogOut, School, ShieldCheck, UserRound } from "lucide-react";
+import {
+  BookOpen,
+  CheckCircle2,
+  LayoutDashboard,
+  LogOut,
+  ShieldCheck,
+  UserRound,
+} from "lucide-react";
 import { signOut } from "@/app/actions";
+import { BrandMark } from "@/components/brand-mark";
 import type { AuthUserWithProfile } from "@/lib/types";
 
 export function DashboardShell({
@@ -15,39 +23,67 @@ export function DashboardShell({
   children: React.ReactNode;
 }) {
   return (
-    <main className="min-h-screen px-5 py-6 sm:px-8">
-      <div className="mx-auto max-w-7xl">
-        <header className="flex flex-col gap-4 rounded-3xl border border-white bg-white/90 p-5 shadow-lg shadow-blue-100/70 backdrop-blur sm:flex-row sm:items-center sm:justify-between">
-          <Link href="/" className="flex items-center gap-3">
-            <span className="grid size-12 place-items-center rounded-2xl bg-blue-600 text-white"><School /></span>
-            <div><p className="font-black">TK Mooc</p><p className="text-xs text-slate-500">Foundation System</p></div>
+    <main className="dashboard-page">
+      <div className="dashboard-frame">
+        <header className="dashboard-header">
+          <Link href="/">
+            <BrandMark />
           </Link>
-          <div className="flex items-center gap-3">
-            <div className="hidden text-right sm:block">
-              <p className="text-sm font-bold text-slate-900">{user.profile.display_name}</p>
-              <p className="text-xs uppercase tracking-wider text-blue-600">{user.profile.role}</p>
+
+          <nav className="dashboard-nav-links" aria-label="เมนู Dashboard">
+            <Link href="/dashboard">ภาพรวม</Link>
+            <Link href="#account">บัญชีผู้ใช้</Link>
+            <Link href="#permissions">สิทธิ์ระบบ</Link>
+          </nav>
+
+          <div className="dashboard-user-actions">
+            <span className="user-avatar"><UserRound size={19} /></span>
+            <div className="user-meta">
+              <strong>{user.profile.display_name}</strong>
+              <small>{user.profile.role}</small>
             </div>
             <form action={signOut}>
-              <button className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-red-200 hover:bg-red-50 hover:text-red-700">
-                <LogOut size={17} /> ออกจากระบบ
+              <button className="signout-button" type="submit">
+                <LogOut size={16} /> <span>ออกจากระบบ</span>
               </button>
             </form>
           </div>
         </header>
 
-        <section className="py-10">
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-600">Phase 1 Dashboard</p>
-          <h1 className="mt-3 text-4xl font-black text-slate-950">{title}</h1>
-          <p className="mt-3 max-w-3xl text-lg leading-8 text-slate-600">{description}</p>
+        <section className="dashboard-hero">
+          <div className="dashboard-hero-copy">
+            <span className="dashboard-hero-kicker">PHASE 1 · FOUNDATION DASHBOARD</span>
+            <h1>{title}</h1>
+            <p>{description}</p>
+            <div className="dashboard-hero-chip-row">
+              <span><CheckCircle2 size={16} /> Supabase Auth</span>
+              <span><CheckCircle2 size={16} /> Role Protected</span>
+              <span><CheckCircle2 size={16} /> Responsive UI</span>
+            </div>
+          </div>
+
+          <div className="dashboard-hero-widget float-reverse" aria-hidden="true">
+            <div className="dashboard-widget-title">
+              <strong>ความพร้อมของระบบ</strong>
+              <span><LayoutDashboard size={15} /></span>
+            </div>
+            <div className="widget-progress"><i /></div>
+            <div className="dashboard-widget-metrics">
+              <div><strong>76%</strong><small>Foundation</small></div>
+              <div><strong>03</strong><small>Security layers</small></div>
+            </div>
+          </div>
         </section>
 
-        <section className="grid gap-5 md:grid-cols-3">
-          <InfoCard icon={<UserRound />} title="บัญชีผู้ใช้" detail={user.profile.display_name} />
-          <InfoCard icon={<ShieldCheck />} title="บทบาทและสิทธิ์" detail={user.profile.role} />
-          <InfoCard icon={<BookOpen />} title="สถานะระบบ" detail="พร้อมเริ่มพัฒนาระยะที่ 2" />
-        </section>
+        <div className="dashboard-content">
+          <section className="dashboard-info-grid" id="account">
+            <InfoCard icon={<UserRound />} title="บัญชีผู้ใช้" detail={user.profile.display_name} />
+            <InfoCard icon={<ShieldCheck />} title="บทบาทและสิทธิ์" detail={user.profile.role} />
+            <InfoCard icon={<BookOpen />} title="สถานะระบบ" detail="พร้อมพัฒนาระยะที่ 2" />
+          </section>
 
-        <section className="mt-7">{children}</section>
+          <section className="dashboard-main-panel" id="permissions">{children}</section>
+        </div>
       </div>
     </main>
   );
@@ -55,10 +91,10 @@ export function DashboardShell({
 
 function InfoCard({ icon, title, detail }: { icon: React.ReactNode; title: string; detail: string }) {
   return (
-    <article className="rounded-3xl border border-white bg-white/90 p-6 shadow-lg shadow-blue-100/60">
-      <span className="grid size-12 place-items-center rounded-2xl bg-blue-100 text-blue-700">{icon}</span>
-      <p className="mt-5 text-sm font-semibold text-slate-500">{title}</p>
-      <p className="mt-1 text-xl font-black text-slate-900">{detail}</p>
+    <article className="dashboard-info-card">
+      <span className="dashboard-info-icon">{icon}</span>
+      <small>{title}</small>
+      <strong>{detail}</strong>
     </article>
   );
 }

@@ -11,8 +11,8 @@ export default async function TeacherPage() {
   return (
     <DashboardShell
       user={user}
-      title="ระบบครู"
-      description="บัญชีครูได้รับการตรวจสอบจาก Supabase Auth และโปรไฟล์บทบาท teacher แล้ว"
+      title="พื้นที่ทำงานสำหรับครู"
+      description="บัญชีครูผ่านการตรวจสอบจาก Supabase Auth และโปรไฟล์บทบาท teacher พร้อมต่อยอดสู่ระบบจัดการชั้นเรียนและบทเรียน"
     >
       <PhaseCard items={["สร้างและจัดการชั้นเรียน", "นำเข้ารายชื่อนักเรียน", "สร้างบทเรียนและงาน", "เช็กชื่อและสมุดคะแนน"]} />
     </DashboardShell>
@@ -21,11 +21,15 @@ export default async function TeacherPage() {
 
 function PhaseCard({ items }: { items: string[] }) {
   return (
-    <div className="rounded-3xl bg-slate-950 p-7 text-white shadow-2xl">
-      <p className="text-sm font-semibold text-blue-300">NEXT · PHASE 2</p>
-      <h2 className="mt-2 text-2xl font-black">ชั้นเรียนและบทเรียน</h2>
-      <div className="mt-6 grid gap-3 sm:grid-cols-2">
-        {items.map((item) => <div key={item} className="flex items-center gap-3 rounded-2xl bg-white/10 p-4"><CheckCircle2 className="text-cyan-300" size={20} />{item}</div>)}
+    <div className="phase-panel">
+      <span className="phase-panel-kicker">NEXT · PHASE 2</span>
+      <h2>ชั้นเรียนและบทเรียน</h2>
+      <div className="phase-item-grid">
+        {items.map((item) => (
+          <div key={item} className="phase-item">
+            <CheckCircle2 size={20} /> {item}
+          </div>
+        ))}
       </div>
     </div>
   );

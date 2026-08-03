@@ -11,15 +11,17 @@ export default async function StudentPage() {
   return (
     <DashboardShell
       user={user}
-      title="ระบบนักเรียน"
-      description="นักเรียนเข้าสู่ระบบด้วยรหัส 5 หลักและ PIN โดยข้อมูลบัญชีถูกแยกตามผู้ใช้"
+      title="พื้นที่การเรียนรู้ของนักเรียน"
+      description="นักเรียนเข้าสู่ระบบด้วยรหัส 5 หลักและ PIN โดยข้อมูลบัญชีและชั้นเรียนถูกแยกตามผู้ใช้ด้วย Supabase RLS"
     >
-      <div className="rounded-3xl bg-gradient-to-br from-blue-700 to-cyan-500 p-7 text-white shadow-2xl">
-        <p className="text-sm font-semibold text-blue-100">NEXT · PHASE 2</p>
-        <h2 className="mt-2 text-2xl font-black">รายวิชาและบทเรียนของฉัน</h2>
-        <div className="mt-6 grid gap-3 sm:grid-cols-2">
+      <div className="phase-panel student-panel">
+        <span className="phase-panel-kicker">NEXT · PHASE 2</span>
+        <h2>รายวิชาและบทเรียนของฉัน</h2>
+        <div className="phase-item-grid">
           {["ดูรายวิชาที่ลงทะเบียน", "เปิดบทเรียน", "ติดตามความก้าวหน้า", "ดูงานที่ต้องส่ง"].map((item) => (
-            <div key={item} className="flex items-center gap-3 rounded-2xl bg-white/15 p-4 backdrop-blur"><CheckCircle2 size={20} />{item}</div>
+            <div key={item} className="phase-item">
+              <CheckCircle2 size={20} /> {item}
+            </div>
           ))}
         </div>
       </div>

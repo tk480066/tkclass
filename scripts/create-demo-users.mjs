@@ -27,7 +27,20 @@ async function findUserByEmail(email) {
 
 async function ensureAuthUser({ email, password, metadata }) {
   const existing = await findUserByEmail(email);
-  if (existing) return existing;
+
+  // Important: if the account already exists, reset its password as well.
+  // Previous versions returned the existing account without updating the password,
+  // so the credentials printed by this script could differ from the real password.
+  if (existing) {
+    const { data, error } = await admin.auth.admin.updateUserById(existing.id, {
+      password,
+      email_confirm: true,
+      user_metadata: metadata,
+    });
+
+    if (error) throw error;
+    return data.user;
+  }
 
   const { data, error } = await admin.auth.admin.createUser({
     email,

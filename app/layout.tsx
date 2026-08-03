@@ -6,7 +6,7 @@ export const metadata: Metadata = {
     default: "TK Mooc",
     template: "%s | TK Mooc",
   },
-  description: "ระบบพื้นฐาน TK Mooc สำหรับครูและนักเรียน",
+  description: "TK Mooc ศูนย์การเรียนรู้ครูปิง พัฒนาด้วย Next.js, Supabase และ Vercel",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

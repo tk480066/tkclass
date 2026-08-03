@@ -1,97 +1,295 @@
 import Link from "next/link";
-import { ArrowRight, Database, LockKeyhole, School } from "lucide-react";
+import {
+  ArrowRight,
+  BadgeCheck,
+  BarChart3,
+  BookOpenCheck,
+  CalendarDays,
+  CheckCircle2,
+  Database,
+  Fingerprint,
+  GraduationCap,
+  Layers3,
+  LockKeyhole,
+  MessageCircleMore,
+  Play,
+  School,
+  ShieldCheck,
+  Sparkles,
+  UserRoundCheck,
+  UsersRound,
+  Zap,
+} from "lucide-react";
+import { BrandMark } from "@/components/brand-mark";
+import { ScrollReveal } from "@/components/scroll-reveal";
 import { getCurrentUser } from "@/lib/auth/require-role";
 
 export default async function HomePage() {
   const user = await getCurrentUser();
 
   return (
-    <main className="min-h-screen px-5 py-8 sm:px-8">
-      <div className="mx-auto max-w-6xl">
-        <nav className="flex items-center justify-between rounded-2xl border border-white/80 bg-white/85 px-5 py-4 shadow-lg shadow-blue-100/60 backdrop-blur">
-          <div className="flex items-center gap-3">
-            <span className="grid size-11 place-items-center rounded-2xl bg-blue-600 text-white">
-              <School size={23} />
-            </span>
-            <div>
-              <p className="font-black text-slate-900">TK Mooc</p>
-              <p className="text-xs text-slate-500">ศูนย์การเรียนรู้ครูปิง</p>
-            </div>
-          </div>
-          <Link
-            href={user ? "/dashboard" : "/login"}
-            className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700"
-          >
-            {user ? "ไปยังระบบ" : "เข้าสู่ระบบ"} <ArrowRight size={17} />
+    <main className="showcase-page">
+      <div className="ambient-orb ambient-orb-one" />
+      <div className="ambient-orb ambient-orb-two" />
+      <div className="showcase-shell">
+        <header className="showcase-nav" id="home">
+          <Link href="/" aria-label="TK Mooc หน้าหลัก">
+            <BrandMark />
           </Link>
-        </nav>
 
-        <section className="grid items-center gap-10 py-20 lg:grid-cols-[1.1fr_.9fr]">
-          <div>
-            <span className="inline-flex rounded-full border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700">
-              Phase 1 · Foundation System
+          <nav className="desktop-menu" aria-label="เมนูหลัก">
+            <a href="#home">หน้าหลัก</a>
+            <a href="#foundation">ระบบพื้นฐาน</a>
+            <a href="#roles">ผู้ใช้งาน</a>
+            <a href="#security">ความปลอดภัย</a>
+          </nav>
+
+          <Link href={user ? "/dashboard" : "/login"} className="nav-cta">
+            {user ? "ไปยังระบบ" : "เข้าสู่ระบบ"}
+            <ArrowRight size={17} />
+          </Link>
+        </header>
+
+        <section className="hero-stage">
+          <div className="hero-grid" />
+          <div className="hero-glow hero-glow-one" />
+          <div className="hero-glow hero-glow-two" />
+
+          <div className="hero-copy">
+            <span className="eyebrow-pill">
+              <Sparkles size={16} /> TK MOOC · FOUNDATION
             </span>
-            <h1 className="mt-6 max-w-3xl text-5xl font-black leading-[1.12] text-slate-950 sm:text-6xl">
-              ระบบพื้นฐานสำหรับพัฒนา LMS บน Vercel และ Supabase
+            <h1>
+              พื้นที่การเรียนรู้
+              <span> ที่เชื่อมครูและนักเรียน</span>
             </h1>
-            <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-600">
-              พร้อมระบบเข้าสู่ระบบครูและนักเรียน โปรไฟล์ บทบาท การป้องกันเส้นทาง และฐานข้อมูลที่กำหนดสิทธิ์ด้วย RLS
+            <p>
+              ระบบพื้นฐานสำหรับพัฒนา Learning Management System ด้วย Next.js,
+              Supabase และ Vercel พร้อมระบบเข้าสู่ระบบ บทบาทผู้ใช้ และการป้องกันข้อมูล
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link
-                href="/login"
-                className="inline-flex items-center gap-2 rounded-2xl bg-blue-600 px-6 py-3.5 font-semibold text-white shadow-xl shadow-blue-200 transition hover:-translate-y-0.5 hover:bg-blue-700"
-              >
-                เริ่มใช้งาน <ArrowRight size={19} />
+            <div className="hero-actions">
+              <Link href={user ? "/dashboard" : "/login"} className="primary-action shimmer-button">
+                <Play size={18} fill="currentColor" />
+                {user ? "เปิด Dashboard" : "เริ่มใช้งานระบบ"}
               </Link>
-              <a
-                href="#features"
-                className="rounded-2xl border border-slate-200 bg-white px-6 py-3.5 font-semibold text-slate-700 transition hover:border-blue-300 hover:text-blue-700"
-              >
-                ดูองค์ประกอบระบบ
+              <a href="#foundation" className="ghost-action">
+                ดูโครงสร้างระบบ <ArrowRight size={18} />
               </a>
             </div>
-          </div>
-
-          <div className="relative">
-            <div className="absolute -inset-5 rounded-[2.5rem] bg-gradient-to-br from-blue-300/50 to-cyan-200/30 blur-2xl" />
-            <div className="relative rounded-[2rem] border border-white bg-white/90 p-7 shadow-2xl shadow-blue-200/70 backdrop-blur">
-              <p className="text-sm font-semibold text-blue-600">SYSTEM STATUS</p>
-              <h2 className="mt-2 text-2xl font-black">โครงสร้างพร้อมต่อยอด</h2>
-              <div className="mt-6 space-y-4">
-                <StatusItem icon={<LockKeyhole />} title="Authentication" detail="Teacher / Student login" />
-                <StatusItem icon={<Database />} title="PostgreSQL" detail="Profiles, Roles, Classes, Enrollments" />
-                <StatusItem icon={<School />} title="Role Dashboard" detail="แยกหน้าตามสิทธิ์ผู้ใช้" />
-              </div>
+            <div className="hero-trust-row">
+              <span><CheckCircle2 size={17} /> Supabase Auth</span>
+              <span><CheckCircle2 size={17} /> Row Level Security</span>
+              <span><CheckCircle2 size={17} /> Vercel Ready</span>
             </div>
           </div>
+
+          <SystemMockup />
         </section>
 
-        <section id="features" className="grid gap-5 pb-16 md:grid-cols-3">
-          {[
-            ["Supabase Auth", "ครูเข้าสู่ระบบด้วยอีเมล นักเรียนใช้รหัส 5 หลักร่วมกับ PIN"],
-            ["Row Level Security", "กำหนดสิทธิ์ระดับแถวที่ฐานข้อมูล ไม่พึ่งการซ่อนเมนูเพียงอย่างเดียว"],
-            ["Vercel Ready", "มี Environment template และโครงสร้าง Next.js พร้อม Deploy"],
-          ].map(([title, detail]) => (
-            <article key={title} className="rounded-3xl border border-white bg-white/85 p-6 shadow-lg shadow-blue-100/70">
-              <h3 className="text-xl font-black text-slate-900">{title}</h3>
-              <p className="mt-3 leading-7 text-slate-600">{detail}</p>
-            </article>
-          ))}
+        <section className="content-section" id="foundation">
+          <ScrollReveal className="section-heading centered-heading">
+            <span className="section-kicker">THE FOUNDATION</span>
+            <h2>ระบบพื้นฐานที่ออกแบบให้ต่อยอดได้ง่าย</h2>
+            <p>
+              โครงสร้างพร้อมสำหรับเพิ่มชั้นเรียน บทเรียน งาน แบบทดสอบ คะแนน และการสื่อสารในระยะถัดไป
+            </p>
+          </ScrollReveal>
+
+          <div className="feature-strip">
+            <ScrollReveal delay={0}>
+              <FeatureTile
+                icon={<Fingerprint />}
+                title="เข้าสู่ระบบปลอดภัย"
+                detail="ครูใช้อีเมล นักเรียนใช้รหัส 5 หลักและ PIN"
+                number="01"
+              />
+            </ScrollReveal>
+            <ScrollReveal delay={110}>
+              <FeatureTile
+                icon={<Database />}
+                title="ฐานข้อมูล PostgreSQL"
+                detail="Profiles, Roles, Classes และ Enrollments"
+                number="02"
+              />
+            </ScrollReveal>
+            <ScrollReveal delay={220}>
+              <FeatureTile
+                icon={<ShieldCheck />}
+                title="สิทธิ์ระดับฐานข้อมูล"
+                detail="ปกป้องข้อมูลด้วย Row Level Security"
+                number="03"
+              />
+            </ScrollReveal>
+          </div>
         </section>
+
+        <section className="split-section soft-panel" id="roles">
+          <ScrollReveal className="split-copy">
+            <span className="section-kicker">ROLE EXPERIENCE</span>
+            <h2>
+              Dashboard แยกตามบทบาท
+              <span> เห็นเฉพาะสิ่งที่ควรเห็น</span>
+            </h2>
+            <p>
+              ครูและนักเรียนได้รับประสบการณ์ใช้งานที่แตกต่างกัน โดยระบบตรวจสอบทั้ง Session,
+              Role และ Policy ในฐานข้อมูล
+            </p>
+            <div className="check-list">
+              <span><BadgeCheck /> ตรวจสอบผู้ใช้จาก Supabase Auth</span>
+              <span><BadgeCheck /> Redirect ไปยัง Dashboard ตามบทบาท</span>
+              <span><BadgeCheck /> ป้องกันการเข้าถึงข้อมูลข้ามบัญชี</span>
+            </div>
+            <Link href="/login" className="text-link">
+              ทดลองเข้าสู่ระบบ <ArrowRight size={18} />
+            </Link>
+          </ScrollReveal>
+
+          <ScrollReveal className="role-visual" delay={140}>
+            <div className="profile-window float-slow">
+              <div className="profile-window-top">
+                <span className="mini-avatar"><School size={20} /></span>
+                <div><strong>ระบบครู</strong><small>Teacher workspace</small></div>
+                <span className="status-dot" />
+              </div>
+              <div className="profile-stat-grid">
+                <div><UsersRound /><strong>6</strong><small>ชั้นเรียน</small></div>
+                <div><BookOpenCheck /><strong>12</strong><small>บทเรียน</small></div>
+                <div><BarChart3 /><strong>84%</strong><small>ความก้าวหน้า</small></div>
+              </div>
+              <div className="profile-course-row">
+                <span className="course-icon"><Layers3 size={19} /></span>
+                <div><strong>วิทยาการคำนวณ</strong><small>มัธยมศึกษาปีที่ 2/1</small></div>
+                <span className="progress-ring">76</span>
+              </div>
+            </div>
+            <div className="student-phone float-reverse">
+              <div className="phone-notch" />
+              <div className="phone-header"><GraduationCap size={18} /><span>นักเรียน</span></div>
+              <div className="phone-welcome"><small>สวัสดี</small><strong>ธนกร ใจดี</strong></div>
+              <div className="phone-progress"><span style={{ width: "72%" }} /></div>
+              <div className="phone-task"><CalendarDays /><div><strong>งานที่ต้องส่ง</strong><small>3 รายการ</small></div></div>
+              <div className="phone-task"><MessageCircleMore /><div><strong>ข้อความใหม่</strong><small>1 ข้อความ</small></div></div>
+            </div>
+          </ScrollReveal>
+        </section>
+
+        <section className="split-section reverse-layout" id="security">
+          <ScrollReveal className="security-visual">
+            <div className="security-card">
+              <div className="security-orbit orbit-a" />
+              <div className="security-orbit orbit-b" />
+              <span className="security-core"><LockKeyhole size={38} /></span>
+              <span className="security-badge badge-a"><UserRoundCheck size={18} /> Auth</span>
+              <span className="security-badge badge-b"><Database size={18} /> RLS</span>
+              <span className="security-badge badge-c"><Zap size={18} /> Edge</span>
+            </div>
+          </ScrollReveal>
+
+          <ScrollReveal className="split-copy" delay={120}>
+            <span className="section-kicker">SECURITY BY DESIGN</span>
+            <h2>
+              ตรวจสอบสิทธิ์หลายชั้น
+              <span> ตั้งแต่หน้าเว็บถึงฐานข้อมูล</span>
+            </h2>
+            <p>
+              ระบบไม่พึ่งการซ่อนเมนูเพียงอย่างเดียว แต่ตรวจ Session ด้วย Proxy ตรวจ Role ใน Server Component
+              และใช้ Supabase RLS เป็นชั้นป้องกันสุดท้าย
+            </p>
+            <div className="metric-row">
+              <div><strong>3</strong><span>ชั้นการตรวจสิทธิ์</span></div>
+              <div><strong>5</strong><span>ตารางพื้นฐาน</span></div>
+              <div><strong>100%</strong><span>Responsive UI</span></div>
+            </div>
+          </ScrollReveal>
+        </section>
+
+        <section className="cta-section">
+          <ScrollReveal className="cta-card">
+            <div>
+              <span className="section-kicker light-kicker">START BUILDING</span>
+              <h2>พร้อมเริ่มพัฒนา TK Mooc ระยะต่อไป</h2>
+              <p>เข้าสู่ระบบเพื่อทดสอบบทบาทครูและนักเรียนบนโครงสร้าง Supabase ที่เตรียมไว้</p>
+            </div>
+            <Link href={user ? "/dashboard" : "/login"} className="cta-white-button">
+              {user ? "เปิด Dashboard" : "เข้าสู่ระบบ"} <ArrowRight size={18} />
+            </Link>
+          </ScrollReveal>
+        </section>
+
+        <footer className="showcase-footer">
+          <BrandMark compact />
+          <p>Next.js · Supabase · Vercel</p>
+          <span>TK Mooc Phase 1</span>
+        </footer>
       </div>
     </main>
   );
 }
 
-function StatusItem({ icon, title, detail }: { icon: React.ReactNode; title: string; detail: string }) {
+function SystemMockup() {
   return (
-    <div className="flex items-center gap-4 rounded-2xl bg-slate-50 p-4">
-      <span className="grid size-11 place-items-center rounded-xl bg-blue-100 text-blue-700">{icon}</span>
-      <div>
-        <p className="font-bold text-slate-900">{title}</p>
-        <p className="text-sm text-slate-500">{detail}</p>
+    <div className="hero-visual" aria-label="ตัวอย่าง Dashboard TK Mooc">
+      <div className="dashboard-device float-main">
+        <div className="device-toolbar">
+          <span className="toolbar-dots"><i /><i /><i /></span>
+          <span className="toolbar-search">TK Mooc Dashboard</span>
+          <span className="toolbar-avatar"><School size={15} /></span>
+        </div>
+        <div className="device-body">
+          <aside className="device-sidebar">
+            <span className="active"><BarChart3 /></span>
+            <span><BookOpenCheck /></span>
+            <span><CalendarDays /></span>
+            <span><MessageCircleMore /></span>
+          </aside>
+          <div className="device-content">
+            <div className="device-title"><div><small>ภาพรวมวันนี้</small><strong>ยินดีต้อนรับ ครูปิง</strong></div><span>+ สร้างใหม่</span></div>
+            <div className="mini-stat-row">
+              <div><small>ชั้นเรียน</small><strong>06</strong><i className="purple" /></div>
+              <div><small>นักเรียน</small><strong>186</strong><i className="blue" /></div>
+              <div><small>งานรอตรวจ</small><strong>12</strong><i className="pink" /></div>
+            </div>
+            <div className="chart-panel">
+              <div className="chart-heading"><span>ความก้าวหน้าการเรียน</span><small>สัปดาห์นี้</small></div>
+              <div className="bar-chart">
+                {[34, 52, 43, 66, 58, 82, 72].map((height, index) => (
+                  <i key={index} style={{ height: `${height}%`, animationDelay: `${index * 90}ms` }} />
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="floating-notice notice-one">
+        <span><CheckCircle2 size={18} /></span>
+        <div><strong>ระบบพร้อมใช้งาน</strong><small>Authentication connected</small></div>
+      </div>
+      <div className="floating-notice notice-two">
+        <span><ShieldCheck size={18} /></span>
+        <div><strong>RLS Protected</strong><small>ข้อมูลแยกตามผู้ใช้</small></div>
       </div>
     </div>
+  );
+}
+
+function FeatureTile({
+  icon,
+  title,
+  detail,
+  number,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  detail: string;
+  number: string;
+}) {
+  return (
+    <article className="feature-tile">
+      <div className="feature-illustration"><span>{icon}</span></div>
+      <h3>{title}</h3>
+      <p>{detail}</p>
+      <span className="feature-number">{number}</span>
+    </article>
   );
 }

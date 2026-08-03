@@ -15,3 +15,5 @@
 - [ ] Deploy
 - [ ] ตั้ง Supabase Site URL และ Redirect URLs
 - [ ] เปลี่ยนรหัสผ่านตัวอย่าง
+- [ ] ตรวจ UI หน้าแรก Login Teacher และ Student บนมือถือ
+- [ ] ทดสอบ Motion และโหมด Reduce Motion

@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Archive, ArrowRight, BookOpenCheck, Layers3, UsersRound } from "lucide-react";
+import { Archive, ArrowRight, BookOpenCheck, ClipboardList, Layers3, UsersRound } from "lucide-react";
 import { archiveClassAction } from "@/app/phase2-actions";
 import { DashboardShell } from "@/components/dashboard-shell";
 import { ClassForm } from "@/components/phase2/class-form";
 import { getClassCurriculum, getClassRoster, getTeacherClass } from "@/lib/data/phase2";
+import { getTeacherAssignments } from "@/lib/data/phase3";
 import { requireRole } from "@/lib/auth/require-role";
 
 export const metadata: Metadata = { title: "รายละเอียดชั้นเรียน" };
@@ -12,19 +13,22 @@ export const metadata: Metadata = { title: "รายละเอียดชั
 export default async function TeacherClassPage({ params }: { params: Promise<{ classId: string }> }) {
   const { classId } = await params;
   const user = await requireRole("teacher");
-  const [classRow, roster, curriculum] = await Promise.all([
+  const [classRow, roster, curriculum, assignments] = await Promise.all([
     getTeacherClass(user.id, classId),
     getClassRoster(user.id, classId),
     getClassCurriculum(user.id, classId),
+    getTeacherAssignments(user.id, classId),
   ]);
   const lessonCount = curriculum.reduce((sum, unit) => sum + unit.lessons.length, 0);
+  const pendingReviews = assignments.reduce((sum, row) => sum + row.pending_review_count, 0);
 
   return (
     <DashboardShell user={user} title={classRow.subject_name} description={`${classRow.class_name} · ${classRow.class_code} · ภาคเรียนที่ ${classRow.semester ?? "-"}/${classRow.academic_year ?? "-"}`}>
-      <div className="class-overview-grid">
+      <div className="class-overview-grid phase3-class-overview-grid">
         <Link href={`/teacher/classes/${classId}/students`} className="class-overview-card"><span><UsersRound /></span><strong>{roster.length}</strong><small>นักเรียน</small><em>จัดการรายชื่อ <ArrowRight size={15} /></em></Link>
         <Link href={`/teacher/classes/${classId}/curriculum`} className="class-overview-card"><span><Layers3 /></span><strong>{curriculum.length}</strong><small>หน่วยการเรียนรู้</small><em>จัดการหลักสูตร <ArrowRight size={15} /></em></Link>
         <Link href={`/teacher/classes/${classId}/curriculum`} className="class-overview-card"><span><BookOpenCheck /></span><strong>{lessonCount}</strong><small>บทเรียน</small><em>เปิดตัวแก้ไข <ArrowRight size={15} /></em></Link>
+        <Link href={`/teacher/classes/${classId}/assignments`} className="class-overview-card"><span><ClipboardList /></span><strong>{assignments.length}</strong><small>งาน · รอตรวจ {pendingReviews}</small><em>จัดการงาน <ArrowRight size={15} /></em></Link>
       </div>
 
       <div className="phase2-two-column-layout class-detail-layout">
@@ -37,6 +41,7 @@ export default async function TeacherClassPage({ params }: { params: Promise<{ c
           <div className="quick-action-list">
             <Link href={`/teacher/classes/${classId}/students`}><UsersRound size={19} /><div><strong>จัดการนักเรียน</strong><small>เพิ่ม นำเข้า และถอนรายชื่อ</small></div><ArrowRight size={17} /></Link>
             <Link href={`/teacher/classes/${classId}/curriculum`}><Layers3 size={19} /><div><strong>หน่วยและบทเรียน</strong><small>สร้างหลักสูตรและเนื้อหา</small></div><ArrowRight size={17} /></Link>
+            <Link href={`/teacher/classes/${classId}/assignments`}><ClipboardList size={19} /><div><strong>งานและการส่งงาน</strong><small>สร้างงาน ตรวจผลงาน และให้คะแนน</small></div><ArrowRight size={17} /></Link>
             {classRow.online_meeting_url && <a href={classRow.online_meeting_url} target="_blank" rel="noreferrer"><BookOpenCheck size={19} /><div><strong>ห้องเรียนออนไลน์</strong><small>เปิดลิงก์ที่กำหนด</small></div><ArrowRight size={17} /></a>}
           </div>
           <form action={archiveClassAction} className="archive-class-form"><input type="hidden" name="classId" value={classId} /><button type="submit"><Archive size={17} /> เก็บชั้นเรียนเข้าคลัง</button></form>

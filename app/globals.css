@@ -638,3 +638,234 @@ html[data-theme="dark"] .phase2-feedback.is-error { color: #ffc2c2; background: 
   .student-course-hero-card { grid-template-columns: 1fr; }
   .large-progress-ring { width: 7rem; height: 7rem; }
 }
+
+/* =========================================================
+   PHASE 3 — Assignments and Submissions
+   ========================================================= */
+.phase3-widget-progress i { width: 100%; }
+.phase3-dashboard-columns { display: grid; gap: 1rem; margin-top: 1rem; }
+.phase3-dashboard-assignment-list, .phase3-dashboard-student-tasks { display: grid; gap: .75rem; }
+.phase3-dashboard-assignment-list > a,
+.phase3-dashboard-student-tasks > a {
+  display: grid; grid-template-columns: auto minmax(0,1fr) auto; align-items: center; gap: .8rem;
+  padding: .9rem; border: 1px solid var(--line); border-radius: 1rem; background: var(--surface-soft);
+  transition: transform .2s ease, border-color .2s ease, background .2s ease;
+}
+.phase3-dashboard-assignment-list > a:hover,
+.phase3-dashboard-student-tasks > a:hover { transform: translateX(4px); border-color: var(--blue-3); background: var(--surface-blue); }
+.phase3-dashboard-assignment-list > a > span,
+.phase3-dashboard-student-tasks > a > span:first-child { display: grid; width: 2.8rem; height: 2.8rem; place-items: center; border-radius: .85rem; color: var(--blue); background: var(--surface-blue); }
+.phase3-dashboard-assignment-list > a > span.has-pending { color: #a55c00; background: #fff4dc; }
+.phase3-dashboard-assignment-list small,
+.phase3-dashboard-student-tasks small { display: block; color: var(--blue); font-weight: 900; }
+.phase3-dashboard-assignment-list strong,
+.phase3-dashboard-student-tasks strong { display: block; margin-top: .15rem; color: var(--ink-strong); }
+.phase3-dashboard-assignment-list em,
+.phase3-dashboard-student-tasks em { display: block; margin-top: .2rem; color: var(--muted); font-size: .78rem; font-style: normal; }
+.phase3-dashboard-student-tasks > a { grid-template-columns: auto minmax(0,1fr) auto auto; }
+
+.phase3-class-shortcuts { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: .85rem; }
+.phase3-class-shortcuts > a {
+  display: grid; grid-template-columns: auto minmax(0,1fr) auto; align-items: center; gap: .75rem; padding: 1rem;
+  border: 1px solid var(--line); border-radius: 1.05rem; background: linear-gradient(145deg,var(--surface),var(--surface-blue));
+  box-shadow: var(--shadow); transition: transform .22s ease, box-shadow .22s ease;
+}
+.phase3-class-shortcuts > a:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+.phase3-class-shortcuts > a > span { display: grid; width: 3rem; height: 3rem; place-items: center; border-radius: .9rem; color: #fff; background: var(--course-color); }
+.phase3-class-shortcuts small, .phase3-class-shortcuts strong, .phase3-class-shortcuts em { display: block; }
+.phase3-class-shortcuts small { color: var(--blue); font-weight: 900; }
+.phase3-class-shortcuts strong { color: var(--ink-strong); }
+.phase3-class-shortcuts em { color: var(--muted); font-size: .77rem; font-style: normal; }
+
+.phase3-assignment-list, .phase3-class-assignment-stack { display: grid; gap: .75rem; }
+.phase3-assignment-row {
+  display: grid; grid-template-columns: minmax(0,1fr) auto auto; align-items: center; gap: 1rem; padding: 1rem;
+  border: 1px solid var(--line); border-radius: 1rem; background: var(--surface-soft); transition: transform .2s ease, border-color .2s ease;
+}
+.phase3-assignment-row:hover { transform: translateX(4px); border-color: var(--blue-3); }
+.phase3-assignment-main > div { display: flex; align-items: center; gap: .55rem; flex-wrap: wrap; }
+.phase3-assignment-main small { color: var(--muted); font-weight: 800; }
+.phase3-assignment-main strong { display: block; margin-top: .45rem; color: var(--ink-strong); font-size: 1rem; }
+.phase3-assignment-main > span { display: block; margin-top: .3rem; color: var(--muted); font-size: .8rem; }
+.phase3-row-metrics { display: flex; gap: .6rem; }
+.phase3-row-metrics span { min-width: 5rem; padding: .6rem .7rem; border-radius: .8rem; text-align: center; color: var(--muted); background: var(--surface); }
+.phase3-row-metrics strong { display: block; color: var(--ink-strong); font-size: 1.05rem; }
+.phase3-row-metrics span.attention { color: #9b5d00; background: #fff4dc; }
+.phase3-class-assignment-stack > a {
+  display: grid; grid-template-columns: minmax(0,1fr) auto; gap: .45rem 1rem; padding: 1rem; border: 1px solid var(--line); border-radius: 1rem; background: var(--surface-soft);
+  transition: transform .2s ease, border-color .2s ease;
+}
+.phase3-class-assignment-stack > a:hover { transform: translateX(4px); border-color: var(--blue-3); }
+.phase3-class-assignment-stack > a > div { display: flex; align-items: center; gap: .5rem; }
+.phase3-class-assignment-stack > a > strong { grid-column: 1; color: var(--ink-strong); }
+.phase3-class-assignment-stack > a > span { display: inline-flex; align-items: center; gap: .35rem; color: var(--muted); font-size: .78rem; }
+.phase3-class-assignment-stack > a > svg { grid-column: 2; grid-row: 1 / span 3; align-self: center; }
+
+.phase3-status {
+  display: inline-flex; align-items: center; justify-content: center; min-height: 1.8rem; padding: .3rem .6rem; border-radius: 999px;
+  font-size: .7rem; font-weight: 900; white-space: nowrap; border: 1px solid transparent;
+}
+.status-not_started { color: #5f6875; background: #eef1f5; }
+.status-draft, .status-withdrawn { color: #745d00; background: #fff7d6; border-color: #f1df8c; }
+.status-published, .status-submitted { color: #075ea6; background: #e5f3ff; border-color: #b8dcfb; }
+.status-late { color: #a94d00; background: #fff0df; border-color: #f7c999; }
+.status-revision_required { color: #9e3f00; background: #fff0e7; border-color: #f5c4aa; }
+.status-graded { color: #6548a8; background: #f1ebff; border-color: #d9cafb; }
+.status-passed { color: #187844; background: #eaf9f0; border-color: #a8dfbd; }
+.status-failed { color: #a52b2b; background: #ffeded; border-color: #efb4b4; }
+.status-closed, .status-archived { color: #5f6875; background: #edf0f4; border-color: #d4d9df; }
+
+.phase3-assignment-layout { grid-template-columns: minmax(19rem,.85fr) minmax(0,1.15fr); }
+.phase3-assignment-form { gap: .9rem; }
+.phase3-checkbox-row, .phase3-checkbox-grid, .phase3-target-tabs { display: flex; flex-wrap: wrap; gap: .7rem; }
+.phase3-checkbox-row label,
+.phase3-checkbox-grid label,
+.phase3-target-tabs label {
+  display: inline-flex !important; align-items: center; gap: .45rem; min-height: 2.5rem; padding: .55rem .7rem;
+  border: 1px solid var(--line); border-radius: .8rem; color: var(--ink); background: var(--surface-soft); font-weight: 750; cursor: pointer;
+}
+.phase3-checkbox-row input, .phase3-checkbox-grid input, .phase3-target-tabs input { width: auto !important; accent-color: var(--blue); }
+.phase3-fieldset { display: grid; gap: .8rem; margin: 0; padding: 1rem; border: 1px solid var(--line); border-radius: 1rem; background: var(--surface-soft); }
+.phase3-fieldset legend { padding: 0 .4rem; color: var(--blue); font-size: .78rem; font-weight: 900; }
+.phase3-roster-picker { display: grid; max-height: 17rem; overflow: auto; gap: .45rem; padding-right: .25rem; }
+.phase3-roster-picker label {
+  display: flex !important; align-items: center; gap: .65rem; padding: .65rem; border: 1px solid var(--line); border-radius: .8rem; background: var(--surface); cursor: pointer;
+}
+.phase3-roster-picker input { width: auto !important; accent-color: var(--blue); }
+.phase3-roster-picker strong, .phase3-roster-picker small { display: block; }
+.phase3-roster-picker small { margin-top: .15rem; color: var(--muted); }
+.phase3-group-select { display: grid !important; gap: .45rem; }
+.phase3-group-select small { color: var(--muted); }
+.phase3-feedback { display: grid; gap: .25rem; padding: .75rem .85rem; border-radius: .8rem; }
+.phase3-feedback.is-success { color: #187844; background: #eaf9f0; border: 1px solid #a8dfbd; }
+.phase3-feedback.is-error { color: #a52b2b; background: #ffeded; border: 1px solid #efb4b4; }
+.phase3-feedback a { color: var(--blue); font-weight: 900; }
+
+.phase3-editor-layout { grid-template-columns: minmax(0,1.35fr) minmax(18rem,.65fr); align-items: start; margin-top: 1rem; }
+.phase3-attachment-column { display: grid; gap: 1rem; }
+.phase3-upload-box, .phase3-submission-upload {
+  display: grid; grid-template-columns: auto minmax(0,1fr) auto; align-items: center; gap: .8rem;
+}
+.phase3-upload-icon { display: grid; width: 3.2rem; height: 3.2rem; place-items: center; border-radius: 1rem; color: var(--blue); background: var(--surface-blue); }
+.phase3-upload-box strong, .phase3-upload-box small,
+.phase3-submission-upload strong, .phase3-submission-upload small { display: block; }
+.phase3-upload-box small, .phase3-submission-upload small { margin-top: .2rem; color: var(--muted); }
+.phase3-upload-box label input, .phase3-submission-upload label input { display: none; }
+.phase3-upload-message { grid-column: 1 / -1; display: inline-flex; align-items: center; gap: .35rem; color: var(--muted); }
+.phase3-external-form { display: grid; gap: .75rem; }
+.phase3-external-form label { display: grid; gap: .35rem; }
+.phase3-external-form label > span { color: var(--ink); font-weight: 800; }
+.phase3-external-form input { width: 100%; padding: .75rem .8rem; border: 1px solid var(--line); border-radius: .75rem; color: var(--ink); background: var(--surface); }
+.phase3-attachment-list { display: grid; gap: .55rem; }
+.phase3-attachment-list > div { display: grid; grid-template-columns: auto minmax(0,1fr) auto auto; align-items: center; gap: .55rem; padding: .65rem; border: 1px solid var(--line); border-radius: .8rem; background: var(--surface-soft); }
+.phase3-attachment-list > div > span { display: grid; width: 2.5rem; height: 2.5rem; place-items: center; border-radius: .75rem; color: var(--blue); background: var(--surface-blue); }
+.phase3-attachment-list strong, .phase3-attachment-list small { display: block; }
+.phase3-attachment-list small { color: var(--muted); }
+.phase3-attachment-list a, .phase3-attachment-list button { display: grid; width: 2.2rem; height: 2.2rem; place-items: center; border: 0; border-radius: .65rem; color: var(--blue); background: var(--surface-blue); cursor: pointer; }
+.phase3-attachment-list button { color: #a52b2b; background: #ffeded; }
+.phase3-muted { display: flex; align-items: center; gap: .4rem; color: var(--muted); }
+.phase3-archive-form button, .phase3-danger-outline { display: inline-flex; align-items: center; justify-content: center; gap: .45rem; width: 100%; padding: .8rem; border: 1px solid #efb4b4; border-radius: .85rem; color: #a52b2b; background: #fff8f8; font-weight: 850; cursor: pointer; }
+
+.phase3-review-section { margin-top: 1rem; }
+.phase3-filter-row { display: flex; flex-wrap: wrap; gap: .4rem; }
+.phase3-filter-row a { padding: .48rem .65rem; border: 1px solid var(--line); border-radius: 999px; color: var(--blue); background: var(--surface); font-size: .76rem; font-weight: 850; }
+.phase3-filter-row a:hover { background: var(--surface-blue); }
+.phase3-submission-stack { display: grid; gap: 1rem; }
+.phase3-submission-card { overflow: hidden; border: 1px solid var(--line); border-radius: 1.15rem; background: var(--surface); box-shadow: var(--shadow); }
+.phase3-submission-card > header { display: grid; grid-template-columns: auto minmax(0,1fr) auto; align-items: center; gap: .7rem; padding: 1rem; border-bottom: 1px solid var(--line); background: var(--surface-soft); }
+.phase3-student-avatar { display: grid; width: 3rem; height: 3rem; place-items: center; border-radius: 1rem; color: var(--blue); background: var(--surface-blue); }
+.phase3-submission-card header strong, .phase3-submission-card header small { display: block; }
+.phase3-submission-card header small { color: var(--muted); }
+.phase3-member-row { display: flex; flex-wrap: wrap; align-items: center; gap: .45rem; padding: .7rem 1rem; border-bottom: 1px solid var(--line); color: var(--muted); }
+.phase3-member-row span { padding: .35rem .5rem; border-radius: 999px; background: var(--surface-blue); color: var(--blue); font-size: .75rem; }
+.phase3-submission-content { display: grid; grid-template-columns: minmax(0,1.3fr) minmax(15rem,.7fr); gap: 1rem; padding: 1rem; }
+.phase3-submission-content small { color: var(--blue); font-weight: 900; }
+.phase3-submission-content p { margin: .4rem 0 0; white-space: pre-line; line-height: 1.7; }
+.phase3-submission-content a { display: inline-flex; align-items: center; gap: .35rem; margin-top: .5rem; color: var(--blue); font-weight: 850; }
+.phase3-file-links { display: grid; gap: .45rem; margin-top: .4rem; }
+.phase3-file-links a { margin: 0; padding: .55rem .65rem; border-radius: .7rem; background: var(--surface-blue); overflow-wrap: anywhere; }
+.phase3-file-links span { color: var(--muted); }
+.phase3-review-form { display: grid; gap: .75rem; padding: 1rem; border-top: 1px solid var(--line); background: var(--surface-soft); }
+.phase3-review-form label { display: grid; gap: .35rem; }
+.phase3-review-form label span { color: var(--ink); font-weight: 800; }
+.phase3-review-form input, .phase3-review-form select, .phase3-review-form textarea { width: 100%; padding: .75rem .8rem; border: 1px solid var(--line); border-radius: .75rem; color: var(--ink); background: var(--surface); }
+
+.phase3-student-assignment-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 1rem; }
+.phase3-student-assignment-card { display: flex; flex-direction: column; min-height: 18rem; padding: 1.1rem; border: 1px solid var(--line); border-radius: 1.15rem; background: linear-gradient(145deg,var(--surface),var(--surface-blue)); box-shadow: var(--shadow); transition: transform .22s ease, box-shadow .22s ease; }
+.phase3-student-assignment-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
+.phase3-assignment-card-top { display: flex; justify-content: space-between; align-items: center; gap: .5rem; }
+.phase3-assignment-card-top > span:last-child { color: var(--muted); font-size: .74rem; font-weight: 850; }
+.phase3-student-assignment-card > small { margin-top: .8rem; color: var(--blue); font-weight: 900; }
+.phase3-student-assignment-card h3 { margin: .35rem 0 0; color: var(--ink-strong); }
+.phase3-student-assignment-card > p { display: -webkit-box; margin: .45rem 0 0; overflow: hidden; color: var(--muted); line-height: 1.65; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
+.phase3-assignment-meta { display: flex; flex-wrap: wrap; gap: .55rem; margin-top: auto; padding-top: .8rem; color: var(--muted); font-size: .78rem; }
+.phase3-assignment-meta span { display: inline-flex; align-items: center; gap: .3rem; }
+.phase3-feedback-preview { display: flex; align-items: flex-start; gap: .4rem; margin-top: .7rem; padding: .6rem; border-radius: .75rem; color: #9e3f00; background: #fff0e7; font-size: .78rem; }
+
+.student-assignment-layout { grid-template-columns: minmax(0,1.35fr) minmax(18rem,.65fr); margin-top: 1rem; }
+.phase3-assignment-reader { overflow: hidden; border: 1px solid var(--line); border-radius: 1.25rem; background: var(--surface); box-shadow: var(--shadow); }
+.phase3-assignment-reader > header { padding: 1.35rem; border-bottom: 1px solid var(--line); background: linear-gradient(145deg,var(--surface),var(--surface-blue)); }
+.phase3-assignment-reader > header > div:first-child { display: flex; align-items: center; gap: .55rem; }
+.phase3-assignment-reader > header small { color: var(--muted); font-weight: 850; }
+.phase3-assignment-reader h1 { margin: .65rem 0 0; color: var(--ink-strong); font-size: clamp(1.8rem,3vw,2.6rem); letter-spacing: -.045em; }
+.phase3-deadline-row { display: flex; flex-wrap: wrap; gap: .8rem; margin-top: .8rem; color: var(--muted); }
+.phase3-deadline-row span { display: inline-flex; align-items: center; gap: .35rem; }
+.phase3-instructions, .phase3-materials, .phase3-workspace { padding: 1.25rem; border-bottom: 1px solid var(--line); }
+.phase3-instructions h2, .phase3-materials h2, .phase3-workspace h2 { margin: 0; color: var(--ink-strong); font-size: 1.25rem; }
+.phase3-instructions p { margin: .65rem 0 0; white-space: pre-line; line-height: 1.85; }
+.phase3-materials h2 { display: flex; align-items: center; gap: .45rem; }
+.phase3-materials > div { display: grid; gap: .55rem; margin-top: .8rem; }
+.phase3-materials a { display: grid; grid-template-columns: auto minmax(0,1fr) auto; align-items: center; gap: .7rem; padding: .75rem; border: 1px solid var(--line); border-radius: .85rem; background: var(--surface-soft); }
+.phase3-materials a > span { display: grid; width: 2.7rem; height: 2.7rem; place-items: center; border-radius: .75rem; color: var(--blue); background: var(--surface-blue); }
+.phase3-materials strong, .phase3-materials small { display: block; }
+.phase3-materials small { color: var(--muted); }
+.phase3-teacher-feedback { display: flex; gap: .8rem; margin: 1rem 1.25rem; padding: 1rem; border: 1px solid #b8dcfb; border-radius: 1rem; background: #eaf5ff; }
+.phase3-teacher-feedback > span { display: grid; width: 3rem; height: 3rem; place-items: center; border-radius: .9rem; color: var(--blue); background: var(--surface); }
+.phase3-teacher-feedback strong { color: var(--blue); }
+.phase3-teacher-feedback p { margin: .35rem 0 0; line-height: 1.65; }
+.phase3-teacher-feedback em { display: inline-block; margin-top: .45rem; color: var(--ink-strong); font-style: normal; font-weight: 900; }
+.phase3-submission-editor { display: grid; gap: .8rem; margin-top: .8rem; }
+.phase3-group-members { padding: .75rem; border-radius: .8rem; background: var(--surface-blue); }
+.phase3-group-members > div { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .45rem; }
+.phase3-group-members span { padding: .35rem .5rem; border-radius: 999px; background: var(--surface); color: var(--blue); font-size: .75rem; }
+.phase3-submit-actions { display: flex; flex-wrap: wrap; gap: .65rem; }
+.phase3-submit-actions form { flex: 1; }
+.phase3-submit-actions button { width: 100%; }
+.phase3-submission-sidebar { display: grid; align-content: start; gap: 1rem; }
+.phase3-submission-upload { grid-template-columns: minmax(0,1fr); }
+.phase3-submission-upload .phase2-secondary-button { width: 100%; }
+.phase3-submission-upload .is-disabled { opacity: .55; pointer-events: none; }
+.phase3-student-file-list { display: grid; gap: .55rem; margin-top: .8rem; }
+.phase3-student-file-list > div { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: .45rem; align-items: center; padding: .65rem; border: 1px solid var(--line); border-radius: .8rem; background: var(--surface-soft); }
+.phase3-student-file-list a { display: flex; align-items: center; gap: .55rem; min-width: 0; color: var(--blue); }
+.phase3-student-file-list strong, .phase3-student-file-list small { display: block; overflow-wrap: anywhere; }
+.phase3-student-file-list small { color: var(--muted); }
+.phase3-student-file-list button { display: grid; width: 2rem; height: 2rem; place-items: center; border: 0; border-radius: .6rem; color: #a52b2b; background: #ffeded; cursor: pointer; }
+.phase3-status-summary { display: grid; gap: .8rem; }
+.phase3-status-summary dl { display: grid; gap: .55rem; margin: 0; }
+.phase3-status-summary dl > div { display: flex; justify-content: space-between; gap: .8rem; padding-top: .55rem; border-top: 1px solid var(--line); }
+.phase3-status-summary dt { color: var(--muted); }
+.phase3-status-summary dd { margin: 0; color: var(--ink-strong); font-weight: 800; text-align: right; }
+.phase3-class-overview-grid { grid-template-columns: repeat(4,minmax(0,1fr)); }
+
+@media (max-width: 1100px) {
+  .phase3-class-shortcuts, .phase3-student-assignment-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .phase3-assignment-layout, .phase3-editor-layout, .student-assignment-layout { grid-template-columns: 1fr; }
+  .phase3-class-overview-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .phase3-attachment-column { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .phase3-attachment-column > *:last-child { grid-column: 1 / -1; }
+}
+@media (max-width: 760px) {
+  .phase3-class-shortcuts, .phase3-student-assignment-grid, .phase3-class-overview-grid, .phase3-attachment-column { grid-template-columns: 1fr; }
+  .phase3-attachment-column > *:last-child { grid-column: auto; }
+  .phase3-assignment-row { grid-template-columns: 1fr auto; }
+  .phase3-row-metrics { grid-column: 1 / -1; }
+  .phase3-submission-content { grid-template-columns: 1fr; }
+  .phase3-upload-box { grid-template-columns: auto minmax(0,1fr); }
+  .phase3-upload-box label { grid-column: 1 / -1; width: 100%; }
+  .phase3-dashboard-student-tasks > a { grid-template-columns: auto minmax(0,1fr) auto; }
+  .phase3-dashboard-student-tasks .phase3-status { grid-column: 2; }
+  .phase3-filter-row { width: 100%; }
+  .phase3-filter-row a { flex: 1; text-align: center; }
+}
+.phase3-readonly-note { padding: .8rem; border: 1px solid #b8dcfb; border-radius: .8rem; color: var(--blue); background: #eaf5ff; font-weight: 750; }

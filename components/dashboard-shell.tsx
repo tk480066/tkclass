@@ -2,13 +2,13 @@ import Link from "next/link";
 import {
   BookOpen,
   CheckCircle2,
+  ClipboardList,
   GraduationCap,
   Home,
   LayoutDashboard,
   LibraryBig,
   LogOut,
   School,
-  ShieldCheck,
   UserRound,
 } from "lucide-react";
 import { signOut } from "@/app/actions";
@@ -39,11 +39,13 @@ export function DashboardShell({
               <>
                 <Link href="/teacher/classes"><School size={15} /> ชั้นเรียน</Link>
                 <Link href="/teacher/classes"><LibraryBig size={15} /> บทเรียน</Link>
+                <Link href="/teacher/assignments"><ClipboardList size={15} /> งานและการส่งงาน</Link>
               </>
             ) : (
               <>
                 <Link href="/student/courses"><GraduationCap size={15} /> รายวิชาของฉัน</Link>
                 <Link href="/student/courses"><BookOpen size={15} /> บทเรียน</Link>
+                <Link href="/student/assignments"><ClipboardList size={15} /> งานของฉัน</Link>
               </>
             )}
           </nav>
@@ -55,37 +57,26 @@ export function DashboardShell({
           </div>
         </header>
 
-        <section className="dashboard-hero site-dashboard-hero">
+        <section className="dashboard-hero site-dashboard-hero phase3-dashboard-hero">
           <div className="dashboard-hero-copy">
-            <span className="dashboard-hero-kicker">TK MOOC · PHASE 2</span>
+            <span className="dashboard-hero-kicker">TK MOOC · PHASE 3</span>
             <h1>{title}</h1>
             <p>{description}</p>
             <div className="dashboard-hero-chip-row">
-              <span><CheckCircle2 size={16} /> Classes & Enrollments</span>
-              <span><CheckCircle2 size={16} /> Units & Lessons</span>
-              <span><CheckCircle2 size={16} /> Learning Progress</span>
+              <span><CheckCircle2 size={16} /> Classes & Lessons</span>
+              <span><CheckCircle2 size={16} /> Assignments & Files</span>
+              <span><CheckCircle2 size={16} /> Submission Review</span>
             </div>
           </div>
           <div className="dashboard-hero-widget dashboard-phone-widget float-dashboard" aria-hidden="true">
-            <div className="dashboard-widget-title"><strong>Phase 2 readiness</strong><span><LayoutDashboard size={15} /></span></div>
-            <div className="widget-progress phase2-widget-progress"><i /></div>
-            <div className="dashboard-widget-metrics"><div><strong>100%</strong><small>Foundation</small></div><div><strong>05</strong><small>Learning tables</small></div></div>
+            <div className="dashboard-widget-title"><strong>Phase 3 readiness</strong><span><LayoutDashboard size={15} /></span></div>
+            <div className="widget-progress phase3-widget-progress"><i /></div>
+            <div className="dashboard-widget-metrics"><div><strong>100%</strong><small>Assignments</small></div><div><strong>02</strong><small>Storage buckets</small></div></div>
           </div>
         </section>
 
-        <div className="dashboard-content">
-          <section className="dashboard-info-grid" id="account">
-            <InfoCard icon={<UserRound />} title="บัญชีผู้ใช้" detail={user.profile.display_name} />
-            <InfoCard icon={<ShieldCheck />} title="บทบาทและสิทธิ์" detail={user.profile.role} />
-            <InfoCard icon={<BookOpen />} title="สถานะระบบ" detail="Phase 2 พร้อมใช้งาน" />
-          </section>
-          <section className="dashboard-main-panel" id="permissions">{children}</section>
-        </div>
+        <div className="dashboard-content site-dashboard-content">{children}</div>
       </div>
     </main>
   );
-}
-
-function InfoCard({ icon, title, detail }: { icon: React.ReactNode; title: string; detail: string }) {
-  return <article className="dashboard-info-card"><span className="dashboard-info-icon">{icon}</span><small>{title}</small><strong>{detail}</strong></article>;
 }

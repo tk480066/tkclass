@@ -1,47 +1,54 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, BookOpenCheck, CheckCircle2, GraduationCap, Layers3 } from "lucide-react";
+import { ArrowRight, BookOpenCheck, CheckCircle2, ClipboardList, Clock3, GraduationCap, Layers3 } from "lucide-react";
 import { DashboardShell } from "@/components/dashboard-shell";
+import { StatusBadge } from "@/components/phase3/status-badge";
 import { getStudentCourses } from "@/lib/data/phase2";
+import { getStudentAssignments } from "@/lib/data/phase3";
 import { requireRole } from "@/lib/auth/require-role";
 
 export const metadata: Metadata = { title: "ระบบนักเรียน" };
 
 export default async function StudentPage() {
   const user = await requireRole("student");
-  const courses = await getStudentCourses(user.id);
+  const [courses, assignments] = await Promise.all([getStudentCourses(user.id), getStudentAssignments(user.id)]);
   const totalLessons = courses.reduce((sum, course) => sum + course.lesson_count, 0);
   const completed = courses.reduce((sum, course) => sum + course.completed_lessons, 0);
-  const averageProgress = courses.length ? Math.round(courses.reduce((sum, course) => sum + course.progress_percent, 0) / courses.length) : 0;
+  const pendingAssignments = assignments.filter((row) => ["not_started", "draft", "withdrawn", "revision_required"].includes(row.display_status)).length;
+  const dueSoon = assignments.filter((row) => row.due_at && new Date(row.due_at).getTime() > Date.now() && new Date(row.due_at).getTime() - Date.now() <= 3 * 86400000 && ["not_started", "draft", "withdrawn", "revision_required"].includes(row.display_status)).length;
 
   return (
-    <DashboardShell user={user} title="พื้นที่การเรียนรู้ของฉัน" description="เข้าถึงรายวิชา บทเรียน และติดตามความก้าวหน้าของตนเองได้จากทุกอุปกรณ์">
+    <DashboardShell user={user} title="พื้นที่การเรียนรู้ของฉัน" description="เข้าถึงรายวิชา บทเรียน งานที่ได้รับมอบหมาย และติดตามผลการเรียนของตนเองได้จากทุกอุปกรณ์">
       <div className="phase2-dashboard-grid student-metric-grid">
         <StudentMetric icon={<GraduationCap />} label="รายวิชาที่ลงทะเบียน" value={courses.length} suffix="วิชา" />
-        <StudentMetric icon={<Layers3 />} label="บทเรียนทั้งหมด" value={totalLessons} suffix="บท" />
-        <StudentMetric icon={<CheckCircle2 />} label="เรียนจบแล้ว" value={completed} suffix="บท" />
-        <StudentMetric icon={<BookOpenCheck />} label="ความก้าวหน้าเฉลี่ย" value={averageProgress} suffix="%" />
+        <StudentMetric icon={<Layers3 />} label="เรียนจบแล้ว" value={completed} suffix={`/${totalLessons} บท`} />
+        <StudentMetric icon={<ClipboardList />} label="งานที่ต้องทำ" value={pendingAssignments} suffix="งาน" />
+        <StudentMetric icon={<Clock3 />} label="ใกล้ครบกำหนด" value={dueSoon} suffix="งาน" />
       </div>
 
       <section className="phase2-section-card">
-        <div className="phase2-section-heading">
-          <div><span className="phase-panel-kicker">MY COURSES</span><h2>รายวิชาของฉัน</h2><p>เลือกวิชาเพื่อดูหน่วยการเรียนรู้และบทเรียนที่เผยแพร่แล้ว</p></div>
-          <Link href="/student/courses" className="phase2-secondary-button">ดูทั้งหมด <ArrowRight size={17} /></Link>
+        <div className="phase2-section-heading"><div><span className="phase-panel-kicker">MY ASSIGNMENTS</span><h2>งานที่ต้องดำเนินการ</h2><p>งานใหม่ งานค้าง และงานที่ครูขอให้แก้ไข</p></div><Link href="/student/assignments" className="phase2-secondary-button">ดูงานทั้งหมด <ArrowRight size={17} /></Link></div>
+        <div className="phase3-dashboard-student-tasks">
+          {assignments.filter((row) => ["not_started", "draft", "withdrawn", "revision_required"].includes(row.display_status)).slice(0, 5).map((assignment) => (
+            <Link href={`/student/assignments/${assignment.id}`} key={assignment.id}><span><ClipboardList size={18} /></span><div><small>{assignment.subject_name}</small><strong>{assignment.title}</strong><em>กำหนดส่ง {formatDate(assignment.due_at)}</em></div><StatusBadge status={assignment.display_status} /><ArrowRight size={17} /></Link>
+          ))}
+          {!pendingAssignments && <div className="phase2-empty-state small"><CheckCircle2 size={32} /><h3>ไม่มีงานค้าง</h3><p>คุณดำเนินการงานที่ได้รับมอบหมายครบแล้ว</p></div>}
         </div>
+      </section>
+
+      <section className="phase2-section-card">
+        <div className="phase2-section-heading"><div><span className="phase-panel-kicker">MY COURSES</span><h2>รายวิชาของฉัน</h2><p>เลือกวิชาเพื่อดูหน่วยการเรียนรู้และบทเรียน</p></div><Link href="/student/courses" className="phase2-secondary-button">ดูทั้งหมด <ArrowRight size={17} /></Link></div>
         <div className="student-course-grid">
-          {courses.slice(0, 6).map((course) => (
+          {courses.slice(0, 4).map((course) => (
             <Link href={`/student/courses/${course.id}`} className="student-course-card" key={course.id} style={{ "--course-color": course.course_color ?? "#0d5ba7" } as React.CSSProperties}>
-              <div className="student-course-cover"><span>{course.class_code}</span><GraduationCap size={36} /></div>
-              <div className="student-course-body"><small>{course.class_name}</small><h3>{course.subject_name}</h3><p>ครูผู้สอน: {course.teacher_name}</p><div className="course-progress-row"><div><i style={{ width: `${course.progress_percent}%` }} /></div><strong>{course.progress_percent}%</strong></div><span className="course-card-link">เข้าสู่รายวิชา <ArrowRight size={16} /></span></div>
+              <div className="student-course-cover"><span>{course.class_code}</span><GraduationCap size={36} /></div><div className="student-course-body"><small>{course.class_name}</small><h3>{course.subject_name}</h3><p>ครูผู้สอน: {course.teacher_name}</p><div className="course-progress-row"><div><i style={{ width: `${course.progress_percent}%` }} /></div><strong>{course.progress_percent}%</strong></div><span className="course-card-link">เข้าสู่รายวิชา <ArrowRight size={16} /></span></div>
             </Link>
           ))}
-          {!courses.length && <div className="phase2-empty-state full-span"><GraduationCap size={38} /><h3>ยังไม่มีรายวิชา</h3><p>ติดต่อครูผู้สอนเพื่อเพิ่มคุณเข้าสู่ชั้นเรียน</p></div>}
+          {!courses.length && <div className="phase2-empty-state full-span"><BookOpenCheck size={38} /><h3>ยังไม่มีรายวิชา</h3><p>ติดต่อครูผู้สอนเพื่อเพิ่มคุณเข้าสู่ชั้นเรียน</p></div>}
         </div>
       </section>
     </DashboardShell>
   );
 }
-
-function StudentMetric({ icon, label, value, suffix }: { icon: React.ReactNode; label: string; value: number; suffix: string }) {
-  return <article className="phase2-metric-card"><span>{icon}</span><div><strong>{value}<em>{suffix}</em></strong><small>{label}</small></div></article>;
-}
+function StudentMetric({ icon, label, value, suffix }: { icon: React.ReactNode; label: string; value: number; suffix: string }) { return <article className="phase2-metric-card"><span>{icon}</span><div><strong>{value}<em>{suffix}</em></strong><small>{label}</small></div></article>; }
+function formatDate(value: string | null) { return value ? new Intl.DateTimeFormat("th-TH", { dateStyle: "medium", timeStyle: "short" }).format(new Date(value)) : "ไม่กำหนด"; }

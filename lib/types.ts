@@ -157,3 +157,114 @@ export type StudentCourseSummary = ClassRow & {
   completed_lessons: number;
   progress_percent: number;
 };
+
+export type AssignmentWorkType = "individual" | "group";
+export type AssignmentStatus = "draft" | "published" | "closed" | "archived";
+export type AssignmentTargetMode = "class" | "students" | "group";
+export type SubmissionStatus = "draft" | "submitted" | "late" | "revision_required" | "graded" | "passed" | "failed" | "withdrawn";
+
+export type AssignmentRow = {
+  id: string;
+  class_id: string;
+  title: string;
+  instructions: string | null;
+  work_type: AssignmentWorkType;
+  max_score: number;
+  passing_score: number | null;
+  publish_at: string | null;
+  due_at: string | null;
+  allow_late: boolean;
+  allow_resubmit: boolean;
+  target_mode: AssignmentTargetMode;
+  target_group_name: string | null;
+  allowed_submission_types: string[];
+  status: AssignmentStatus;
+  rubric_json: Array<Record<string, unknown>>;
+  created_at: string;
+  updated_at: string;
+};
+
+export type AssignmentTargetRow = {
+  id: string;
+  assignment_id: string;
+  student_id: string | null;
+  group_name: string | null;
+  created_at: string;
+};
+
+export type AssignmentAttachmentRow = {
+  id: string;
+  assignment_id: string;
+  storage_path: string | null;
+  external_url: string | null;
+  file_name: string | null;
+  mime_type: string | null;
+  file_size: number | null;
+  created_at: string;
+  signed_url?: string | null;
+};
+
+export type SubmissionRow = {
+  id: string;
+  assignment_id: string;
+  submitted_by: string;
+  group_name: string | null;
+  answer_text: string | null;
+  link_url: string | null;
+  status: SubmissionStatus;
+  submitted_at: string | null;
+  withdrawn_at: string | null;
+  revision_count: number;
+  score: number | null;
+  teacher_feedback: string | null;
+  rubric_scores: Array<Record<string, unknown>>;
+  reviewed_at: string | null;
+  reviewed_by: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type SubmissionMemberRow = {
+  id: string;
+  submission_id: string;
+  student_id: string;
+  member_role: "owner" | "member";
+  created_at: string;
+};
+
+export type SubmissionFileRow = {
+  id: string;
+  submission_id: string;
+  uploaded_by: string;
+  storage_path: string;
+  file_name: string;
+  mime_type: string | null;
+  file_size: number | null;
+  created_at: string;
+  signed_url?: string | null;
+};
+
+export type TeacherAssignmentSummary = AssignmentRow & {
+  class_code: string;
+  subject_name: string;
+  class_name: string;
+  submission_count: number;
+  pending_review_count: number;
+  graded_count: number;
+};
+
+export type StudentAssignmentSummary = AssignmentRow & {
+  class_code: string;
+  subject_name: string;
+  class_name: string;
+  teacher_name: string;
+  submission: SubmissionRow | null;
+  display_status: "not_started" | SubmissionStatus;
+};
+
+export type SubmissionWithStudent = SubmissionRow & {
+  student_code: string;
+  student_name: string;
+  members: Array<{ student_id: string; student_code: string; student_name: string; member_role: "owner" | "member" }>;
+  files: SubmissionFileRow[];
+};

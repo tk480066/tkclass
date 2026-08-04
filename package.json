@@ -1,6 +1,6 @@
 {
-  "name": "tk-mooc-phase2",
-  "version": "2.0.0",
+  "name": "tk-mooc-phase3",
+  "version": "3.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -10,7 +10,8 @@
     "create-demo-users": "node --env-file=.env.local scripts/create-demo-users.mjs",
     "create-user": "node --env-file=.env.local scripts/create-user.mjs",
     "verify-demo-login": "node --env-file=.env.local scripts/verify-demo-login.mjs",
-    "seed-phase2": "node --env-file=.env.local scripts/seed-phase2-demo.mjs"
+    "seed-phase2": "node --env-file=.env.local scripts/seed-phase2-demo.mjs",
+    "seed-phase3": "node --env-file=.env.local scripts/seed-phase3-demo.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "latest",

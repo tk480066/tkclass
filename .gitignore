@@ -8,3 +8,9 @@ out
 *.log
 .DS_Store
 .env*
+migration_data/
+backups/
+*.backup
+*.dump
+*.sql.gz
+.env.production.local

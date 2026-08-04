@@ -1,0 +1,2 @@
+question_code,quiz_code,question_type,prompt,explanation,points,order_no,is_required,accepted_answers,case_sensitive
+CS-M2-1-Q01-01,CS-M2-1-Q01,single_choice,ข้อใดเป็นตัวอย่างการแยกส่วนปัญหา,แบ่งงานโครงงานออกเป็นงานย่อย,1,1,true,,false

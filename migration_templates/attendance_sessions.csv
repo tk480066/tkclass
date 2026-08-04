@@ -1,0 +1,2 @@
+session_code,class_code,teacher_code,title,session_date,period_label,opens_at,closes_at,late_after_minutes,allow_self_checkin,check_in_code,status,note
+CS-M2-1-ATT-001,CS-M2-1,T001,เช็กชื่อเข้าเรียน,2026-05-05,คาบ 1,2026-05-05T08:00:00+07:00,2026-05-05T09:00:00+07:00,15,false,,closed,

@@ -1,0 +1,2 @@
+class_code,teacher_code,subject_name,class_name,level,room,semester,academic_year,description,status,online_meeting_url,course_color,syllabus
+CS-M2-1,T001,วิทยาการคำนวณ,มัธยมศึกษาปีที่ 2/1,ม.2,1,1,2569,รายวิชาวิทยาการคำนวณ,active,,#0d5ba7,

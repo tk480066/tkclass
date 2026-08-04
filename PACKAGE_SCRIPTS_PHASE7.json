@@ -1,0 +1,8 @@
+{
+  "phase7:create-admin": "node --env-file=.env.local scripts/phase7/create-admin.mjs",
+  "phase7:preflight": "node --env-file=.env.local scripts/phase7/preflight.mjs",
+  "phase7:backup": "node --env-file=.env.local scripts/phase7/backup.mjs",
+  "phase7:import": "node --env-file=.env.local scripts/phase7/import-csv.mjs",
+  "phase7:maintenance": "node --env-file=.env.local scripts/phase7/set-maintenance.mjs",
+  "phase7:postflight": "node --env-file=.env.local scripts/phase7/postflight.mjs"
+}

@@ -1,0 +1,2 @@
+quiz_code,class_code,lesson_code,title,instructions,status,open_at,close_at,time_limit_minutes,max_attempts,passing_percent,shuffle_questions,shuffle_options,show_score_after_submit,show_correct_answers
+CS-M2-1-Q01,CS-M2-1,CS-M2-1-L01,แบบทดสอบการแยกส่วนปัญหา,เลือกคำตอบที่ถูกต้อง,published,2026-05-02T08:00:00+07:00,2026-05-12T23:59:00+07:00,20,1,50,true,true,true,false

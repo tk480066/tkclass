@@ -1,6 +1,6 @@
 {
-  "name": "tk-mooc-phase6",
-  "version": "6.0.0",
+  "name": "tk-mooc-phase7",
+  "version": "7.0.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -14,7 +14,13 @@
     "seed-phase3": "node --env-file=.env.local scripts/seed-phase3-demo.mjs",
     "seed-phase4": "node --env-file=.env.local scripts/seed-phase4-demo.mjs",
     "seed-phase5": "node --env-file=.env.local scripts/seed-phase5-demo.mjs",
-    "seed-phase6": "node --env-file=.env.local scripts/seed-phase6-demo.mjs"
+    "seed-phase6": "node --env-file=.env.local scripts/seed-phase6-demo.mjs",
+    "phase7:create-admin": "node --env-file=.env.local scripts/phase7/create-admin.mjs",
+    "phase7:preflight": "node --env-file=.env.local scripts/phase7/preflight.mjs",
+    "phase7:backup": "node --env-file=.env.local scripts/phase7/backup.mjs",
+    "phase7:import": "node --env-file=.env.local scripts/phase7/import-csv.mjs",
+    "phase7:maintenance": "node --env-file=.env.local scripts/phase7/set-maintenance.mjs",
+    "phase7:postflight": "node --env-file=.env.local scripts/phase7/postflight.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "latest",

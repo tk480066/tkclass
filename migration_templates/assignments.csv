@@ -1,0 +1,2 @@
+assignment_code,class_code,title,instructions,work_type,max_score,passing_score,publish_at,due_at,allow_late,allow_resubmit,target_mode,target_group_name,allowed_submission_types,status,rubric_json
+CS-M2-1-A01,CS-M2-1,ใบงานการแยกส่วนปัญหา,วิเคราะห์ปัญหาใกล้ตัว 1 เรื่อง,individual,10,5,2026-05-02T08:00:00+07:00,2026-05-09T23:59:00+07:00,true,true,class,,text|file|link,published,[]

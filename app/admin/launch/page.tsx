@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import {
   AlertTriangle,
   CheckCircle2,
   CircleDashed,
   Database,
+  LayoutDashboard,
   Rocket,
   ShieldCheck,
   Users,
@@ -66,6 +68,9 @@ export default async function LaunchCenterPage({ searchParams }: LaunchPageProps
               <span className={`rounded-full px-4 py-2 text-sm font-bold ${productionReady ? "bg-emerald-400/20 text-emerald-100" : "bg-amber-300/20 text-amber-100"}`}>
                 {productionReady ? "พร้อมเปิดใช้งาน" : "กำลังเตรียมเปิดใช้งาน"}
               </span>
+              <Link href="/admin/content/homepage" className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-bold text-white transition hover:bg-white/20">
+                <LayoutDashboard size={16} /> จัดการหน้าหลัก
+              </Link>
               <form action={signOut}>
                 <button type="submit" className="rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-bold text-white transition hover:bg-white/20">
                   ออกจากระบบ

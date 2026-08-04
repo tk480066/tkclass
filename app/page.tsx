@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -6,8 +7,10 @@ import {
   ChevronLeft,
   ChevronRight,
   CircleUserRound,
+  GraduationCap,
   Home,
   Info,
+  Link2,
   LogIn,
   Megaphone,
   MessageCircleMore,
@@ -15,13 +18,19 @@ import {
   Sparkles,
   UsersRound,
 } from "lucide-react";
-import { BrandMark } from "@/components/brand-mark";
 import { ScrollReveal } from "@/components/scroll-reveal";
+import { SiteBrand } from "@/components/site-brand";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { getCurrentUser } from "@/lib/auth/require-role";
+import {
+  getHomepagePublicContent,
+  type SiteNavigationIcon,
+  type SiteNavigationItem,
+} from "@/lib/data/phase8";
 
 export default async function HomePage() {
-  const user = await getCurrentUser();
+  const [user, homepage] = await Promise.all([getCurrentUser(), getHomepagePublicContent()]);
+  const settings = homepage.settings;
 
   return (
     <main className="site-page" id="home">
@@ -29,73 +38,78 @@ export default async function HomePage() {
       <div className="site-ambient site-ambient-two" />
 
       <header className="floating-header">
-        <Link href="/" className="header-brand" aria-label="TK Mooc หน้าหลัก">
-          <BrandMark />
+        <Link href="/" className="header-brand" aria-label={`${settings.header_site_name} หน้าหลัก`}>
+          <SiteBrand
+            siteName={settings.header_site_name}
+            tagline={settings.header_tagline}
+            logoUrl={homepage.logoUrl}
+            logoAlt={settings.header_logo_alt}
+            showTagline={settings.header_show_tagline}
+          />
         </Link>
 
         <nav className="main-nav" aria-label="เมนูหลัก">
-          <a href="#home"><Home size={16} /> หน้าหลัก</a>
-          <a href="#roles"><MonitorPlay size={16} /> สำหรับครู</a>
-          <a href="#roles"><CircleUserRound size={16} /> สำหรับนักเรียน</a>
-          <a href="#about"><Info size={16} /> เกี่ยวกับ</a>
+          {homepage.navigation.map((item) => (
+            <NavigationLink key={item.id} item={item} />
+          ))}
         </nav>
 
         <div className="header-actions">
-          <ThemeToggle />
+          {settings.header_show_theme_toggle ? <ThemeToggle /> : null}
           <Link href={user ? "/dashboard" : "/login"} className="admin-button">
-            <LogIn size={17} /> {user ? "เข้าสู่ระบบ" : "ผู้ดูแลระบบ"}
+            <LogIn size={17} />
+            {user ? settings.header_logged_in_label : settings.header_login_label}
           </Link>
         </div>
       </header>
 
-      <section className="hero-section">
-        <div className="hero-blue-shape" />
-        <div className="hero-dot hero-dot-one" />
-        <div className="hero-dot hero-dot-two" />
+      {settings.hero_is_visible ? (
+        <section className={`hero-section hero-mode-${settings.hero_visual_mode}`}>
+          <div className="hero-blue-shape" />
+          <div className="hero-dot hero-dot-one" />
+          <div className="hero-dot hero-dot-two" />
 
-        <div className="hero-content">
-          <span className="hero-label"><Sparkles size={15} /> ห้องเรียนแห่งอนาคต</span>
-          <h1>
-            เชื่อมต่อการสอน
-            <span>อย่างเป็นระบบ</span>
-          </h1>
-          <p>
-            รวมลิงก์ชั้นเรียน ข่าวประกาศ และกิจกรรมสำคัญไว้ในที่เดียว
-            พร้อมส่วนจัดการข้อมูลสำหรับผู้ดูแลระบบ
-          </p>
-          <div className="hero-buttons">
-            <Link href="/login" className="button-primary">สำหรับครู <ArrowRight size={17} /></Link>
-            <a href="#calendar" className="button-secondary">ดูกิจกรรม</a>
-          </div>
-        </div>
-
-        <div className="hero-phone-zone" aria-label="ตัวอย่าง TK Mooc Dashboard">
-          <div className="hero-phone-shadow" />
-          <div className="hero-phone float-phone">
-            <div className="phone-speaker" />
-            <div className="phone-dashboard-card">
-              <small>TK Mooc Dashboard</small>
-              <strong>Welcome back!</strong>
-              <i /><i className="short" />
+          <div className="hero-content">
+            {settings.hero_badge ? (
+              <span className="hero-label">
+                <Sparkles size={15} /> {settings.hero_badge}
+              </span>
+            ) : null}
+            <h1>
+              {settings.hero_title_primary}
+              <span>{settings.hero_title_accent}</span>
+            </h1>
+            <p>{settings.hero_description}</p>
+            <div className="hero-buttons">
+              <SmartLink href={settings.hero_primary_url} className="button-primary">
+                {settings.hero_primary_label} <ArrowRight size={17} />
+              </SmartLink>
+              <SmartLink href={settings.hero_secondary_url} className="button-secondary">
+                {settings.hero_secondary_label}
+              </SmartLink>
             </div>
-            <div className="phone-shortcuts">
-              <span><BookOpenCheck size={17} /></span>
-              <span><CalendarDays size={17} /></span>
-            </div>
-            <div className="phone-progress-title"><strong>Learning progress</strong><b>72%</b></div>
-            <div className="phone-progress-track"><i /></div>
-            <div className="phone-lines"><i /><i /><i /></div>
           </div>
-          <div className="floating-chip teacher-chip"><MonitorPlay size={18} /><span><small>สำหรับครู</small><strong>จัดการชั้นเรียน</strong></span></div>
-          <div className="floating-chip student-chip"><CircleUserRound size={18} /><span><small>สำหรับนักเรียน</small><strong>เรียนรู้ทันที</strong></span></div>
-        </div>
 
-        <div className="hero-slider-controls" aria-hidden="true">
-          <button type="button"><ChevronLeft size={17} /></button>
-          <span /><span className="active" />
-          <button type="button"><ChevronRight size={17} /></button>
-        </div>
-      </section>
+          {settings.hero_visual_mode === "image" && homepage.heroImageUrl ? (
+            <div className="hero-image-zone">
+              <div className="hero-image-halo" />
+              <div className="hero-image-frame float-dashboard">
+                <img src={homepage.heroImageUrl} alt={settings.hero_image_alt} />
+              </div>
+              <div className="floating-chip teacher-chip">
+                <MonitorPlay size={18} />
+                <span><small>สำหรับครู</small><strong>จัดการชั้นเรียน</strong></span>
+              </div>
+              <div className="floating-chip student-chip">
+                <CircleUserRound size={18} />
+                <span><small>สำหรับนักเรียน</small><strong>เรียนรู้ทันที</strong></span>
+              </div>
+            </div>
+          ) : null}
+
+          {settings.hero_visual_mode === "phone" ? <PhoneHeroVisual siteName={settings.header_site_name} /> : null}
+        </section>
+      ) : null}
 
       <section className="section role-section" id="roles">
         <ScrollReveal className="section-title centered-title">
@@ -130,14 +144,14 @@ export default async function HomePage() {
         <ScrollReveal className="section-title centered-title">
           <span>LATEST NEWS</span>
           <h2>ข่าวสารและประกาศ</h2>
-          <p>ติดตามข้อมูลสำคัญ ข่าวประชาสัมพันธ์ และประกาศล่าสุดจาก TK Mooc</p>
+          <p>ติดตามข้อมูลสำคัญ ข่าวประชาสัมพันธ์ และประกาศล่าสุดจาก {settings.header_site_name}</p>
         </ScrollReveal>
 
         <div className="news-grid">
           <ScrollReveal delay={0}>
             <NewsCard
               date="22 ส.ค. 2569"
-              title="ยินดีต้อนรับสู่ TK Mooc"
+              title={`ยินดีต้อนรับสู่ ${settings.header_site_name}`}
               description="ศูนย์รวมการเรียนรู้ ข่าวสาร และกิจกรรมสำหรับครูและนักเรียน"
               pinned
             />
@@ -162,18 +176,22 @@ export default async function HomePage() {
         <div className="calendar-layout">
           <ScrollReveal className="calendar-card">
             <div className="calendar-heading">
-              <button type="button"><ChevronLeft size={17} /></button>
+              <button type="button" aria-label="เดือนก่อนหน้า"><ChevronLeft size={17} /></button>
               <strong>สิงหาคม 2569</strong>
-              <button type="button"><ChevronRight size={17} /></button>
+              <button type="button" aria-label="เดือนถัดไป"><ChevronRight size={17} /></button>
             </div>
             <div className="calendar-weekdays">
-              {['อา','จ','อ','พ','พฤ','ศ','ส'].map((day) => <span key={day}>{day}</span>)}
+              {["อา", "จ", "อ", "พ", "พฤ", "ศ", "ส"].map((day) => <span key={day}>{day}</span>)}
             </div>
             <div className="calendar-days">
               {Array.from({ length: 35 }, (_, index) => {
                 const value = index < 5 ? 27 + index : index - 4;
                 const muted = index < 5 || value > 31;
-                return <span key={index} className={`${muted ? 'muted' : ''} ${value === 3 && !muted ? 'selected' : ''}`}>{value > 31 ? value - 31 : value}</span>;
+                return (
+                  <span key={index} className={`${muted ? "muted" : ""} ${value === 3 && !muted ? "selected" : ""}`}>
+                    {value > 31 ? value - 31 : value}
+                  </span>
+                );
               })}
             </div>
           </ScrollReveal>
@@ -183,7 +201,7 @@ export default async function HomePage() {
               <span className="event-icon"><CalendarDays size={21} /></span>
               <div>
                 <small>กิจกรรมถัดไป</small>
-                <h3>อบรมการใช้งานระบบ TK Mooc</h3>
+                <h3>อบรมการใช้งานระบบ {settings.header_site_name}</h3>
                 <p>22 ส.ค. 2569 · ห้องปฏิบัติการคอมพิวเตอร์</p>
               </div>
             </article>
@@ -215,7 +233,7 @@ export default async function HomePage() {
             </a>
           </ScrollReveal>
           <ScrollReveal delay={100}>
-            <a className="useful-link" href="mailto:admin@example.com">
+            <a className="useful-link" href={contactHref(settings.footer_contact_line_2)}>
               <span><MessageCircleMore size={20} /></span>
               <div><strong>ติดต่อผู้ดูแลระบบ</strong><small>แจ้งปัญหาการใช้งานและขอความช่วยเหลือ</small></div>
               <ArrowRight size={18} />
@@ -224,20 +242,126 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <footer className="site-footer">
-        <div className="footer-glow" />
-        <div className="footer-main">
-          <div className="footer-brand"><BrandMark /><p>พื้นที่เรียนรู้ที่เชื่อมโยงทุกคนอย่างเป็นระบบ</p></div>
-          <div><strong>ติดต่อเรา</strong><p>กลุ่มสาระวิทยาศาสตร์และเทคโนโลยี</p><p>admin@example.com</p></div>
-          <div><strong>ช่องทางออนไลน์</strong><p>Facebook</p><p>YouTube</p><p>LINE</p></div>
-        </div>
-        <div className="footer-bottom"><span>© 2026 TK Mooc. All rights reserved.</span><span>Next.js · Supabase · Vercel</span></div>
-      </footer>
+      {settings.footer_is_visible ? (
+        <footer className="site-footer">
+          <div className="footer-glow" />
+          <div className="footer-main">
+            <div className="footer-brand">
+              <SiteBrand
+                siteName={settings.header_site_name}
+                tagline={settings.header_tagline}
+                logoUrl={homepage.logoUrl}
+                logoAlt={settings.header_logo_alt}
+                showTagline={settings.header_show_tagline}
+              />
+              <p>{settings.footer_description}</p>
+            </div>
+            <div>
+              <strong>{settings.footer_contact_heading}</strong>
+              {settings.footer_contact_line_1 ? <p>{settings.footer_contact_line_1}</p> : null}
+              {settings.footer_contact_line_2 ? <p>{settings.footer_contact_line_2}</p> : null}
+            </div>
+            <div>
+              <strong>{settings.footer_social_heading}</strong>
+              <FooterLink label={settings.footer_facebook_label} href={settings.footer_facebook_url} />
+              <FooterLink label={settings.footer_youtube_label} href={settings.footer_youtube_url} />
+              <FooterLink label={settings.footer_line_label} href={settings.footer_line_url} />
+            </div>
+          </div>
+          <div className="footer-bottom">
+            <span>{settings.footer_copyright}</span>
+            {settings.footer_technology ? <span>{settings.footer_technology}</span> : null}
+          </div>
+        </footer>
+      ) : null}
     </main>
   );
 }
 
-function RoleCard({ icon, title, description, label, href }: { icon: React.ReactNode; title: string; description: string; label: string; href: string }) {
+function NavigationLink({ item }: { item: SiteNavigationItem }) {
+  const target = item.open_new_tab ? "_blank" : undefined;
+  const rel = item.open_new_tab ? "noreferrer noopener" : undefined;
+  return (
+    <a href={safeHref(item.url)} target={target} rel={rel}>
+      <NavigationIcon name={item.icon_name} />
+      {item.label}
+    </a>
+  );
+}
+
+function NavigationIcon({ name }: { name: SiteNavigationIcon }) {
+  const props = { size: 16 };
+  switch (name) {
+    case "home": return <Home {...props} />;
+    case "teacher": return <MonitorPlay {...props} />;
+    case "student": return <CircleUserRound {...props} />;
+    case "about": return <Info {...props} />;
+    case "book": return <BookOpenCheck {...props} />;
+    case "calendar": return <CalendarDays {...props} />;
+    case "info": return <Info {...props} />;
+    case "megaphone": return <Megaphone {...props} />;
+    default: return <Link2 {...props} />;
+  }
+}
+
+function SmartLink({ href, className, children }: { href: string; className: string; children: ReactNode }) {
+  const safe = safeHref(href);
+  if (safe.startsWith("/")) return <Link href={safe} className={className}>{children}</Link>;
+  return <a href={safe} className={className}>{children}</a>;
+}
+
+function PhoneHeroVisual({ siteName }: { siteName: string }) {
+  return (
+    <div className="hero-phone-zone" aria-label={`ตัวอย่าง ${siteName} Dashboard`}>
+      <div className="hero-phone-shadow" />
+      <div className="hero-phone float-phone">
+        <div className="phone-speaker" />
+        <div className="phone-dashboard-card">
+          <small>{siteName} Dashboard</small>
+          <strong>Welcome back!</strong>
+          <i /><i className="short" />
+        </div>
+        <div className="phone-shortcuts">
+          <span><BookOpenCheck size={17} /></span>
+          <span><CalendarDays size={17} /></span>
+        </div>
+        <div className="phone-progress-title"><strong>Learning progress</strong><b>72%</b></div>
+        <div className="phone-progress-track"><i /></div>
+        <div className="phone-lines"><i /><i /><i /></div>
+      </div>
+      <div className="floating-chip teacher-chip"><MonitorPlay size={18} /><span><small>สำหรับครู</small><strong>จัดการชั้นเรียน</strong></span></div>
+      <div className="floating-chip student-chip"><CircleUserRound size={18} /><span><small>สำหรับนักเรียน</small><strong>เรียนรู้ทันที</strong></span></div>
+    </div>
+  );
+}
+
+function FooterLink({ label, href }: { label: string; href: string }) {
+  if (!label) return null;
+  if (!href) return <p>{label}</p>;
+  return <p><a href={safeHref(href)} target="_blank" rel="noreferrer noopener">{label}</a></p>;
+}
+
+function contactHref(value: string) {
+  const contact = value.trim();
+  return contact.includes("@") ? `mailto:${contact}` : "#about";
+}
+
+function safeHref(value: string) {
+  const href = value.trim();
+  if (
+    href.startsWith("/") ||
+    href.startsWith("#") ||
+    href.startsWith("https://") ||
+    href.startsWith("http://") ||
+    href.startsWith("mailto:") ||
+    href.startsWith("tel:")
+  ) {
+    return href;
+  }
+  return "#";
+}
+
+function RoleCard({ icon, title, description, label, href }: { icon: ReactNode; title: string; description: string; label: string; href: string }) {
   return (
     <article className="role-card">
       <div className="role-card-corner" />
@@ -253,7 +377,7 @@ function NewsCard({ date, title, description, pinned = false }: { date: string; 
   return (
     <article className="news-card">
       <div className="news-cover">
-        {pinned && <span>ปักหมุด</span>}
+        {pinned ? <span>ปักหมุด</span> : null}
         <Megaphone size={34} />
       </div>
       <div className="news-content">

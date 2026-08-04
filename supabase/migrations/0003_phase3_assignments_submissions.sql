@@ -29,7 +29,7 @@ create table if not exists public.assignments (
   instructions text,
   work_type public.assignment_work_type not null default 'individual',
   max_score numeric(8,2) not null default 10 check (max_score > 0),
-  passing_score numeric(8,2) check (passing_score is null or passing_score >= 0),
+  passing_score numeric(8,2),
   publish_at timestamptz,
   due_at timestamptz,
   allow_late boolean not null default true,
@@ -41,7 +41,10 @@ create table if not exists public.assignments (
   rubric_json jsonb not null default '[]'::jsonb,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  constraint assignments_passing_score_check check (passing_score is null or passing_score <= max_score),
+  constraint assignments_passing_score_check check (
+    passing_score is null
+    or (passing_score >= 0 and passing_score <= max_score)
+  ),
   constraint assignments_group_target_check check (target_mode <> 'group' or nullif(trim(target_group_name), '') is not null)
 );
 

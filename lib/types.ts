@@ -268,3 +268,157 @@ export type SubmissionWithStudent = SubmissionRow & {
   members: Array<{ student_id: string; student_code: string; student_name: string; member_role: "owner" | "member" }>;
   files: SubmissionFileRow[];
 };
+
+export type QuizStatus = "draft" | "published" | "closed" | "archived";
+export type QuizQuestionType = "single_choice" | "multiple_choice" | "true_false" | "short_answer" | "essay";
+export type QuizAttemptStatus = "in_progress" | "submitted" | "graded" | "expired";
+
+export type QuizRow = {
+  id: string;
+  class_id: string;
+  lesson_id: string | null;
+  title: string;
+  instructions: string | null;
+  status: QuizStatus;
+  open_at: string | null;
+  close_at: string | null;
+  time_limit_minutes: number | null;
+  max_attempts: number;
+  passing_percent: number;
+  shuffle_questions: boolean;
+  shuffle_options: boolean;
+  show_score_after_submit: boolean;
+  show_correct_answers: boolean;
+  total_points: number;
+  created_at: string;
+  updated_at: string;
+};
+
+export type QuizQuestionRow = {
+  id: string;
+  quiz_id: string;
+  question_type: QuizQuestionType;
+  prompt: string;
+  explanation: string | null;
+  points: number;
+  order_no: number;
+  is_required: boolean;
+  accepted_answers: string[];
+  case_sensitive: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
+export type QuizOptionRow = {
+  id: string;
+  question_id: string;
+  option_text: string;
+  is_correct: boolean;
+  order_no: number;
+  created_at: string;
+};
+
+export type QuizQuestionWithOptions = QuizQuestionRow & {
+  options: QuizOptionRow[];
+};
+
+export type QuizAttemptRow = {
+  id: string;
+  quiz_id: string;
+  student_id: string;
+  attempt_no: number;
+  status: QuizAttemptStatus;
+  started_at: string;
+  expires_at: string | null;
+  submitted_at: string | null;
+  graded_at: string | null;
+  score: number | null;
+  max_score: number;
+  percent: number | null;
+  passed: boolean | null;
+  question_order: string[];
+  option_order: Record<string, string[]>;
+  created_at: string;
+  updated_at: string;
+};
+
+export type QuizAnswerRow = {
+  id: string;
+  attempt_id: string;
+  question_id: string;
+  answer_text: string | null;
+  selected_option_ids: string[];
+  answer_json: Record<string, unknown>;
+  is_correct: boolean | null;
+  awarded_score: number | null;
+  teacher_feedback: string | null;
+  graded_at: string | null;
+  graded_by: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type TeacherQuizSummary = QuizRow & {
+  class_code: string;
+  subject_name: string;
+  class_name: string;
+  question_count: number;
+  attempt_count: number;
+  pending_review_count: number;
+  average_percent: number | null;
+};
+
+export type StudentQuizSummary = QuizRow & {
+  class_code: string;
+  subject_name: string;
+  class_name: string;
+  teacher_name: string;
+  attempt_count: number;
+  latest_attempt: QuizAttemptRow | null;
+  availability: "upcoming" | "open" | "closed";
+  can_attempt: boolean;
+};
+
+export type StudentQuizPayloadQuestion = {
+  id: string;
+  question_type: QuizQuestionType;
+  prompt: string;
+  points: number;
+  order_no: number;
+  is_required: boolean;
+  options: Array<{ id: string; option_text: string; order_no: number }>;
+  answer?: {
+    answer_text?: string | null;
+    selected_option_ids?: string[];
+    answer_json?: Record<string, unknown>;
+  };
+};
+
+export type StudentQuizAttemptPayload = {
+  attempt: QuizAttemptRow;
+  quiz: Pick<QuizRow, "id" | "title" | "instructions" | "time_limit_minutes" | "total_points" | "show_score_after_submit" | "show_correct_answers">;
+  questions: StudentQuizPayloadQuestion[];
+};
+
+export type QuizAttemptWithStudent = QuizAttemptRow & {
+  student_code: string;
+  student_name: string;
+};
+
+export type StudentQuizResultQuestion = {
+  id: string;
+  question_type: QuizQuestionType;
+  prompt: string;
+  points: number;
+  order_no: number;
+  explanation: string | null;
+  accepted_answers: string[];
+  options: Array<{ id: string; option_text: string; order_no: number; is_correct: boolean | null }>;
+};
+
+export type StudentQuizResultPayload = {
+  attempt: QuizAttemptRow;
+  quiz: QuizRow;
+  answers: QuizAnswerRow[];
+  questions: StudentQuizResultQuestion[];
+};

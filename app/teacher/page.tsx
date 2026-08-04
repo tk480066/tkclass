@@ -4,6 +4,7 @@ import {
   ArrowRight,
   BookOpenCheck,
   ClipboardCheck,
+  FileQuestion,
   Clock3,
   Layers3,
   Plus,
@@ -12,18 +13,23 @@ import {
 } from "lucide-react";
 import { DashboardShell } from "@/components/dashboard-shell";
 import { getTeacherAssignmentDashboard } from "@/lib/data/phase3";
+import { getTeacherQuizDashboard } from "@/lib/data/phase4";
+import { QuizStatusBadge } from "@/components/phase4/quiz-status-badge";
 import { requireRole } from "@/lib/auth/require-role";
 
 export const metadata: Metadata = { title: "ระบบครู" };
 
 export default async function TeacherPage() {
   const user = await requireRole("teacher");
-  const { classes, assignments, metrics: assignmentMetrics } = await getTeacherAssignmentDashboard(user.id);
+  const [assignmentData, quizData] = await Promise.all([getTeacherAssignmentDashboard(user.id), getTeacherQuizDashboard(user.id)]);
+  const { classes, assignments, metrics: assignmentMetrics } = assignmentData;
+  const { quizzes, metrics: quizMetrics } = quizData;
   const metrics = {
     classes: classes.length,
     students: classes.reduce((sum, row) => sum + row.student_count, 0),
     lessons: classes.reduce((sum, row) => sum + row.lesson_count, 0),
     pendingReview: assignmentMetrics.pending_review_count,
+    quizzes: quizMetrics.quiz_count,
   };
 
   return (
@@ -37,6 +43,7 @@ export default async function TeacherPage() {
         <MetricCard icon={<UsersRound />} label="นักเรียนในความรับผิดชอบ" value={metrics.students} />
         <MetricCard icon={<BookOpenCheck />} label="บทเรียนทั้งหมด" value={metrics.lessons} />
         <MetricCard icon={<Clock3 />} label="งานที่รอตรวจ" value={metrics.pendingReview} />
+        <MetricCard icon={<FileQuestion />} label="แบบทดสอบ" value={metrics.quizzes} />
       </div>
 
       <div className="phase3-dashboard-columns">
@@ -76,6 +83,19 @@ export default async function TeacherPage() {
           </div>
         </section>
       </div>
+
+      <section className="phase2-section-card">
+        <div className="phase2-section-heading">
+          <div><span className="phase-panel-kicker">QUIZZES</span><h2>แบบทดสอบล่าสุด</h2><p>{quizzes.length} ชุด · รอตรวจ {quizMetrics.pending_review_count} ครั้ง</p></div>
+          <Link href="/teacher/quizzes" className="phase2-secondary-button"><FileQuestion size={17} /> แบบทดสอบทั้งหมด</Link>
+        </div>
+        <div className="phase4-dashboard-quiz-list">
+          {quizzes.slice(0, 5).map((quiz) => (
+            <Link href={`/teacher/quizzes/${quiz.id}`} key={quiz.id}><span><FileQuestion size={18} /></span><div><small>{quiz.class_code}</small><strong>{quiz.title}</strong><em>{quiz.question_count} ข้อ · ทำแล้ว {quiz.attempt_count} ครั้ง</em></div><QuizStatusBadge status={quiz.status} /><ArrowRight size={17} /></Link>
+          ))}
+          {!quizzes.length && <div className="phase2-empty-state small"><FileQuestion size={30} /><p>ยังไม่มีแบบทดสอบ</p></div>}
+        </div>
+      </section>
     </DashboardShell>
   );
 }

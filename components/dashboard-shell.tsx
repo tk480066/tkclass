@@ -3,6 +3,7 @@ import {
   BookOpen,
   CheckCircle2,
   ClipboardList,
+  FileQuestion,
   GraduationCap,
   Home,
   LayoutDashboard,
@@ -40,12 +41,14 @@ export function DashboardShell({
                 <Link href="/teacher/classes"><School size={15} /> ชั้นเรียน</Link>
                 <Link href="/teacher/classes"><LibraryBig size={15} /> บทเรียน</Link>
                 <Link href="/teacher/assignments"><ClipboardList size={15} /> งานและการส่งงาน</Link>
+                <Link href="/teacher/quizzes"><FileQuestion size={15} /> แบบทดสอบ</Link>
               </>
             ) : (
               <>
                 <Link href="/student/courses"><GraduationCap size={15} /> รายวิชาของฉัน</Link>
                 <Link href="/student/courses"><BookOpen size={15} /> บทเรียน</Link>
                 <Link href="/student/assignments"><ClipboardList size={15} /> งานของฉัน</Link>
+                <Link href="/student/quizzes"><FileQuestion size={15} /> แบบทดสอบ</Link>
               </>
             )}
           </nav>
@@ -59,19 +62,20 @@ export function DashboardShell({
 
         <section className="dashboard-hero site-dashboard-hero phase3-dashboard-hero">
           <div className="dashboard-hero-copy">
-            <span className="dashboard-hero-kicker">TK MOOC · PHASE 3</span>
+            <span className="dashboard-hero-kicker">TK MOOC · PHASE 4</span>
             <h1>{title}</h1>
             <p>{description}</p>
             <div className="dashboard-hero-chip-row">
               <span><CheckCircle2 size={16} /> Classes & Lessons</span>
               <span><CheckCircle2 size={16} /> Assignments & Files</span>
               <span><CheckCircle2 size={16} /> Submission Review</span>
+              <span><CheckCircle2 size={16} /> Online Quizzes</span>
             </div>
           </div>
           <div className="dashboard-hero-widget dashboard-phone-widget float-dashboard" aria-hidden="true">
-            <div className="dashboard-widget-title"><strong>Phase 3 readiness</strong><span><LayoutDashboard size={15} /></span></div>
-            <div className="widget-progress phase3-widget-progress"><i /></div>
-            <div className="dashboard-widget-metrics"><div><strong>100%</strong><small>Assignments</small></div><div><strong>02</strong><small>Storage buckets</small></div></div>
+            <div className="dashboard-widget-title"><strong>Phase 4 readiness</strong><span><LayoutDashboard size={15} /></span></div>
+            <div className="widget-progress phase4-widget-progress"><i /></div>
+            <div className="dashboard-widget-metrics"><div><strong>100%</strong><small>Quiz engine</small></div><div><strong>05</strong><small>Question types</small></div></div>
           </div>
         </section>
 

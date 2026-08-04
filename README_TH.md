@@ -21,3 +21,11 @@ supabase/migrations/0003_phase3_assignments_submissions.sql
 ```text
 supabase/verify_phase3.sql
 ```
+
+---
+
+## Phase 4 — แบบทดสอบ
+
+Phase 4 เพิ่มระบบสร้างแบบทดสอบออนไลน์ คำถาม 5 รูปแบบ การสุ่มคำถาม/ตัวเลือก การจับเวลา การตรวจอัตโนมัติ และการให้คะแนนคำตอบอธิบาย
+
+อ่านวิธีติดตั้งและทดสอบได้ที่ [`README_PHASE4_TH.md`](./README_PHASE4_TH.md)

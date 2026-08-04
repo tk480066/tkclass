@@ -422,3 +422,171 @@ export type StudentQuizResultPayload = {
   answers: QuizAnswerRow[];
   questions: StudentQuizResultQuestion[];
 };
+
+export type AttendanceSessionStatus = "draft" | "open" | "closed" | "cancelled";
+export type AttendanceStatus = "unmarked" | "present" | "late" | "absent" | "leave" | "sick" | "activity";
+export type AttendanceCheckinMethod = "manual" | "code" | "qr";
+
+export type AttendanceSessionRow = {
+  id: string;
+  class_id: string;
+  title: string;
+  session_date: string;
+  period_label: string | null;
+  opens_at: string | null;
+  closes_at: string | null;
+  late_after_minutes: number;
+  allow_self_checkin: boolean;
+  check_in_code: string | null;
+  status: AttendanceSessionStatus;
+  note: string | null;
+  created_by: string;
+  created_at: string;
+  updated_at: string;
+};
+
+export type AttendanceRecordRow = {
+  id: string;
+  session_id: string;
+  student_id: string;
+  status: AttendanceStatus;
+  checked_in_at: string | null;
+  check_in_method: AttendanceCheckinMethod;
+  note: string | null;
+  marked_by: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type AttendanceSessionSummary = AttendanceSessionRow & {
+  class_code: string;
+  subject_name: string;
+  class_name: string;
+  student_count: number;
+  present_count: number;
+  late_count: number;
+  absent_count: number;
+  leave_count: number;
+  unmarked_count: number;
+};
+
+export type AttendanceRosterRow = RosterStudent & {
+  record: AttendanceRecordRow | null;
+};
+
+export type StudentAttendanceItem = AttendanceSessionRow & {
+  class_code: string;
+  subject_name: string;
+  class_name: string;
+  teacher_name: string;
+  record: AttendanceRecordRow | null;
+};
+
+export type GradeSourceType = "assignment" | "quiz" | "custom";
+export type GradeItemStatus = "draft" | "published" | "archived";
+export type GradeCalculationMethod = "weighted_categories" | "total_points";
+
+export type GradeCategoryRow = {
+  id: string;
+  class_id: string;
+  name: string;
+  weight_percent: number;
+  order_no: number;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
+export type GradeSettingsRow = {
+  class_id: string;
+  calculation_method: GradeCalculationMethod;
+  publish_final_grade: boolean;
+  minimum_attendance_percent: number;
+  grade_scale: Array<{ grade: string; min: number }>;
+  created_at: string;
+  updated_at: string;
+};
+
+export type GradeItemRow = {
+  id: string;
+  class_id: string;
+  category_id: string | null;
+  source_type: GradeSourceType;
+  source_id: string | null;
+  title: string;
+  description: string | null;
+  max_score: number;
+  item_weight: number;
+  status: GradeItemStatus;
+  due_at: string | null;
+  order_no: number;
+  created_at: string;
+  updated_at: string;
+};
+
+export type GradeEntryRow = {
+  id: string;
+  grade_item_id: string;
+  student_id: string;
+  score: number | null;
+  is_excused: boolean;
+  feedback: string | null;
+  graded_by: string | null;
+  graded_at: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type GradebookItem = GradeItemRow & {
+  category_name: string;
+};
+
+export type GradebookStudentRow = {
+  student_id: string;
+  student_code: string;
+  student_name: string;
+  student_number: number | null;
+  scores: Record<string, number | null>;
+  category_percentages: Record<string, number | null>;
+  total_percent: number | null;
+  letter_grade: string | null;
+  attendance_percent: number | null;
+};
+
+export type TeacherGradebookPayload = {
+  classRow: ClassRow;
+  categories: GradeCategoryRow[];
+  settings: GradeSettingsRow;
+  items: GradebookItem[];
+  students: GradebookStudentRow[];
+  gradeEntries: GradeEntryRow[];
+};
+
+export type StudentCourseGrade = {
+  class_id: string;
+  class_code: string;
+  subject_name: string;
+  class_name: string;
+  teacher_name: string;
+  calculation_method: GradeCalculationMethod;
+  publish_final_grade: boolean;
+  total_percent: number | null;
+  letter_grade: string | null;
+  attendance_percent: number | null;
+  minimum_attendance_percent: number;
+  categories: Array<{
+    id: string;
+    name: string;
+    weight_percent: number;
+    percent: number | null;
+  }>;
+  items: Array<{
+    id: string;
+    title: string;
+    category_name: string;
+    source_type: GradeSourceType;
+    score: number | null;
+    max_score: number;
+    feedback: string | null;
+  }>;
+};

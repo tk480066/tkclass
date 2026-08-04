@@ -6,6 +6,8 @@ import {
   ClipboardCheck,
   FileQuestion,
   Clock3,
+  CalendarCheck2,
+  GraduationCap,
   Layers3,
   Plus,
   School,
@@ -14,6 +16,7 @@ import {
 import { DashboardShell } from "@/components/dashboard-shell";
 import { getTeacherAssignmentDashboard } from "@/lib/data/phase3";
 import { getTeacherQuizDashboard } from "@/lib/data/phase4";
+import { getTeacherAttendanceDashboard } from "@/lib/data/phase5";
 import { QuizStatusBadge } from "@/components/phase4/quiz-status-badge";
 import { requireRole } from "@/lib/auth/require-role";
 
@@ -21,7 +24,7 @@ export const metadata: Metadata = { title: "ระบบครู" };
 
 export default async function TeacherPage() {
   const user = await requireRole("teacher");
-  const [assignmentData, quizData] = await Promise.all([getTeacherAssignmentDashboard(user.id), getTeacherQuizDashboard(user.id)]);
+  const [assignmentData, quizData, attendanceData] = await Promise.all([getTeacherAssignmentDashboard(user.id), getTeacherQuizDashboard(user.id), getTeacherAttendanceDashboard(user.id)]);
   const { classes, assignments, metrics: assignmentMetrics } = assignmentData;
   const { quizzes, metrics: quizMetrics } = quizData;
   const metrics = {
@@ -30,6 +33,8 @@ export default async function TeacherPage() {
     lessons: classes.reduce((sum, row) => sum + row.lesson_count, 0),
     pendingReview: assignmentMetrics.pending_review_count,
     quizzes: quizMetrics.quiz_count,
+    attendanceOpen: attendanceData.metrics.open,
+    attendanceToday: attendanceData.metrics.today,
   };
 
   return (
@@ -44,6 +49,7 @@ export default async function TeacherPage() {
         <MetricCard icon={<BookOpenCheck />} label="บทเรียนทั้งหมด" value={metrics.lessons} />
         <MetricCard icon={<Clock3 />} label="งานที่รอตรวจ" value={metrics.pendingReview} />
         <MetricCard icon={<FileQuestion />} label="แบบทดสอบ" value={metrics.quizzes} />
+        <MetricCard icon={<CalendarCheck2 />} label="คาบเช็กชื่อวันนี้" value={metrics.attendanceToday} />
       </div>
 
       <div className="phase3-dashboard-columns">
@@ -82,6 +88,12 @@ export default async function TeacherPage() {
             {!assignments.length && <div className="phase2-empty-state small"><ClipboardCheck size={30} /><p>ยังไม่มีงานที่มอบหมาย</p></div>}
           </div>
         </section>
+      </div>
+
+
+      <div className="phase5-dashboard-shortcuts">
+        <Link href="/teacher/attendance"><CalendarCheck2 size={24} /><div><span className="phase-panel-kicker">ATTENDANCE</span><strong>เช็กชื่อและเวลาเรียน</strong><p>สร้างคาบ เปิดรหัส และดูประวัติการเข้าเรียน</p></div><em>{metrics.attendanceOpen} คาบกำลังเปิด</em><ArrowRight size={18} /></Link>
+        <Link href="/teacher/gradebook"><GraduationCap size={24} /><div><span className="phase-panel-kicker">GRADEBOOK</span><strong>สมุดคะแนนและผลการเรียน</strong><p>รวมคะแนนงาน แบบทดสอบ และคะแนนเพิ่มเติม</p></div><em>{classes.length} ชั้นเรียน</em><ArrowRight size={18} /></Link>
       </div>
 
       <section className="phase2-section-card">

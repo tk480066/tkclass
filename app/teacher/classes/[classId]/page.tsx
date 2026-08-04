@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Archive, ArrowRight, BookOpenCheck, ClipboardList, FileQuestion, Layers3, UsersRound } from "lucide-react";
+import { Archive, ArrowRight, BookOpenCheck, CalendarCheck2, ClipboardList, FileQuestion, GraduationCap, Layers3, UsersRound } from "lucide-react";
 import { archiveClassAction } from "@/app/phase2-actions";
 import { DashboardShell } from "@/components/dashboard-shell";
 import { ClassForm } from "@/components/phase2/class-form";
@@ -32,6 +32,8 @@ export default async function TeacherClassPage({ params }: { params: Promise<{ c
         <Link href={`/teacher/classes/${classId}/curriculum`} className="class-overview-card"><span><BookOpenCheck /></span><strong>{lessonCount}</strong><small>บทเรียน</small><em>เปิดตัวแก้ไข <ArrowRight size={15} /></em></Link>
         <Link href={`/teacher/classes/${classId}/assignments`} className="class-overview-card"><span><ClipboardList /></span><strong>{assignments.length}</strong><small>งาน · รอตรวจ {pendingReviews}</small><em>จัดการงาน <ArrowRight size={15} /></em></Link>
         <Link href={`/teacher/classes/${classId}/quizzes`} className="class-overview-card"><span><FileQuestion /></span><strong>{quizzes.length}</strong><small>แบบทดสอบ</small><em>จัดการแบบทดสอบ <ArrowRight size={15} /></em></Link>
+        <Link href={`/teacher/classes/${classId}/attendance`} className="class-overview-card"><span><CalendarCheck2 /></span><strong>เช็ก</strong><small>เวลาเรียน</small><em>เปิดระบบเช็กชื่อ <ArrowRight size={15} /></em></Link>
+        <Link href={`/teacher/classes/${classId}/gradebook`} className="class-overview-card"><span><GraduationCap /></span><strong>รวม</strong><small>สมุดคะแนน</small><em>ดูผลการเรียน <ArrowRight size={15} /></em></Link>
       </div>
 
       <div className="phase2-two-column-layout class-detail-layout">
@@ -46,6 +48,8 @@ export default async function TeacherClassPage({ params }: { params: Promise<{ c
             <Link href={`/teacher/classes/${classId}/curriculum`}><Layers3 size={19} /><div><strong>หน่วยและบทเรียน</strong><small>สร้างหลักสูตรและเนื้อหา</small></div><ArrowRight size={17} /></Link>
             <Link href={`/teacher/classes/${classId}/assignments`}><ClipboardList size={19} /><div><strong>งานและการส่งงาน</strong><small>สร้างงาน ตรวจผลงาน และให้คะแนน</small></div><ArrowRight size={17} /></Link>
             <Link href={`/teacher/classes/${classId}/quizzes`}><FileQuestion size={19} /><div><strong>แบบทดสอบ</strong><small>สร้างคำถาม เปิดสอบ และดูผลคะแนน</small></div><ArrowRight size={17} /></Link>
+            <Link href={`/teacher/classes/${classId}/attendance`}><CalendarCheck2 size={19} /><div><strong>เช็กชื่อและเวลาเรียน</strong><small>สร้างคาบ เปิดรหัส และบันทึกสถานะ</small></div><ArrowRight size={17} /></Link>
+            <Link href={`/teacher/classes/${classId}/gradebook`}><GraduationCap size={19} /><div><strong>สมุดคะแนน</strong><small>รวมคะแนนและคำนวณผลการเรียน</small></div><ArrowRight size={17} /></Link>
             {classRow.online_meeting_url && <a href={classRow.online_meeting_url} target="_blank" rel="noreferrer"><BookOpenCheck size={19} /><div><strong>ห้องเรียนออนไลน์</strong><small>เปิดลิงก์ที่กำหนด</small></div><ArrowRight size={17} /></a>}
           </div>
           <form action={archiveClassAction} className="archive-class-form"><input type="hidden" name="classId" value={classId} /><button type="submit"><Archive size={17} /> เก็บชั้นเรียนเข้าคลัง</button></form>

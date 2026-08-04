@@ -9,6 +9,7 @@ import {
   CalendarCheck2,
   GraduationCap,
   Layers3,
+  MessageCircleMore,
   Plus,
   School,
   UsersRound,
@@ -17,6 +18,7 @@ import { DashboardShell } from "@/components/dashboard-shell";
 import { getTeacherAssignmentDashboard } from "@/lib/data/phase3";
 import { getTeacherQuizDashboard } from "@/lib/data/phase4";
 import { getTeacherAttendanceDashboard } from "@/lib/data/phase5";
+import { getCommunicationCounts } from "@/lib/data/phase6";
 import { QuizStatusBadge } from "@/components/phase4/quiz-status-badge";
 import { requireRole } from "@/lib/auth/require-role";
 
@@ -24,7 +26,7 @@ export const metadata: Metadata = { title: "ระบบครู" };
 
 export default async function TeacherPage() {
   const user = await requireRole("teacher");
-  const [assignmentData, quizData, attendanceData] = await Promise.all([getTeacherAssignmentDashboard(user.id), getTeacherQuizDashboard(user.id), getTeacherAttendanceDashboard(user.id)]);
+  const [assignmentData, quizData, attendanceData, communicationCounts] = await Promise.all([getTeacherAssignmentDashboard(user.id), getTeacherQuizDashboard(user.id), getTeacherAttendanceDashboard(user.id), getCommunicationCounts(user.id, user.profile.role)]);
   const { classes, assignments, metrics: assignmentMetrics } = assignmentData;
   const { quizzes, metrics: quizMetrics } = quizData;
   const metrics = {
@@ -35,13 +37,14 @@ export default async function TeacherPage() {
     quizzes: quizMetrics.quiz_count,
     attendanceOpen: attendanceData.metrics.open,
     attendanceToday: attendanceData.metrics.today,
+    unreadMessages: communicationCounts.unreadMessages,
   };
 
   return (
     <DashboardShell
       user={user}
       title="จัดการการเรียนรู้และงานของนักเรียน"
-      description="สร้างชั้นเรียนและบทเรียน มอบหมายงาน ติดตามการส่ง ตรวจผลงาน ให้คะแนน และส่งคำขอแก้ไข"
+      description="สร้างชั้นเรียนและบทเรียน มอบหมายงาน เช็กชื่อ ให้คะแนน และสื่อสารกับนักเรียนจากพื้นที่เดียวกัน"
     >
       <div className="phase2-dashboard-grid">
         <MetricCard icon={<School />} label="ชั้นเรียน" value={metrics.classes} />
@@ -50,6 +53,7 @@ export default async function TeacherPage() {
         <MetricCard icon={<Clock3 />} label="งานที่รอตรวจ" value={metrics.pendingReview} />
         <MetricCard icon={<FileQuestion />} label="แบบทดสอบ" value={metrics.quizzes} />
         <MetricCard icon={<CalendarCheck2 />} label="คาบเช็กชื่อวันนี้" value={metrics.attendanceToday} />
+        <MetricCard icon={<MessageCircleMore />} label="ข้อความยังไม่อ่าน" value={metrics.unreadMessages} />
       </div>
 
       <div className="phase3-dashboard-columns">
@@ -91,7 +95,8 @@ export default async function TeacherPage() {
       </div>
 
 
-      <div className="phase5-dashboard-shortcuts">
+      <div className="phase5-dashboard-shortcuts phase6-dashboard-shortcuts">
+        <Link href="/teacher/communication"><MessageCircleMore size={24} /><div><span className="phase-panel-kicker">COMMUNICATION</span><strong>ประกาศและข้อความ</strong><p>สื่อสารกับผู้เรียนและติดตามการอ่าน</p></div><em>{metrics.unreadMessages} ยังไม่อ่าน</em><ArrowRight size={18} /></Link>
         <Link href="/teacher/attendance"><CalendarCheck2 size={24} /><div><span className="phase-panel-kicker">ATTENDANCE</span><strong>เช็กชื่อและเวลาเรียน</strong><p>สร้างคาบ เปิดรหัส และดูประวัติการเข้าเรียน</p></div><em>{metrics.attendanceOpen} คาบกำลังเปิด</em><ArrowRight size={18} /></Link>
         <Link href="/teacher/gradebook"><GraduationCap size={24} /><div><span className="phase-panel-kicker">GRADEBOOK</span><strong>สมุดคะแนนและผลการเรียน</strong><p>รวมคะแนนงาน แบบทดสอบ และคะแนนเพิ่มเติม</p></div><em>{classes.length} ชั้นเรียน</em><ArrowRight size={18} /></Link>
       </div>

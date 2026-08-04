@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, BookOpenCheck, CalendarCheck2, CheckCircle2, ClipboardList, Clock3, FileQuestion, GraduationCap, Layers3, Percent } from "lucide-react";
+import { ArrowRight, BookOpenCheck, CalendarCheck2, CheckCircle2, ClipboardList, Clock3, FileQuestion, GraduationCap, Layers3, MessageCircleMore, Percent } from "lucide-react";
 import { DashboardShell } from "@/components/dashboard-shell";
 import { StatusBadge } from "@/components/phase3/status-badge";
 import { getStudentCourses } from "@/lib/data/phase2";
 import { getStudentAssignments } from "@/lib/data/phase3";
 import { getStudentQuizzes } from "@/lib/data/phase4";
 import { getStudentAttendance, getStudentGrades } from "@/lib/data/phase5";
+import { getCommunicationCounts } from "@/lib/data/phase6";
 import { QuizStatusBadge } from "@/components/phase4/quiz-status-badge";
 import { requireRole } from "@/lib/auth/require-role";
 
@@ -14,7 +15,7 @@ export const metadata: Metadata = { title: "ระบบนักเรียน
 
 export default async function StudentPage() {
   const user = await requireRole("student");
-  const [courses, assignments, quizzes, attendance, grades] = await Promise.all([getStudentCourses(user.id), getStudentAssignments(user.id), getStudentQuizzes(user.id), getStudentAttendance(user.id), getStudentGrades(user.id)]);
+  const [courses, assignments, quizzes, attendance, grades, communicationCounts] = await Promise.all([getStudentCourses(user.id), getStudentAssignments(user.id), getStudentQuizzes(user.id), getStudentAttendance(user.id), getStudentGrades(user.id), getCommunicationCounts(user.id, user.profile.role)]);
   const totalLessons = courses.reduce((sum, course) => sum + course.lesson_count, 0);
   const completed = courses.reduce((sum, course) => sum + course.completed_lessons, 0);
   const pendingAssignments = assignments.filter((row) => ["not_started", "draft", "withdrawn", "revision_required"].includes(row.display_status)).length;
@@ -30,10 +31,12 @@ export default async function StudentPage() {
         <StudentMetric icon={<Clock3 />} label="ใกล้ครบกำหนด" value={dueSoon} suffix="งาน" />
         <StudentMetric icon={<FileQuestion />} label="แบบทดสอบเปิด" value={openQuizzes} suffix="ชุด" />
         <StudentMetric icon={<CalendarCheck2 />} label="อัตราเข้าเรียน" value={attendance.overallPercent ?? 0} suffix={attendance.overallPercent === null ? "-" : "%"} />
+        <StudentMetric icon={<MessageCircleMore />} label="แจ้งเตือนใหม่" value={communicationCounts.totalUnread} suffix="รายการ" />
       </div>
 
 
-      <div className="phase5-dashboard-shortcuts student">
+      <div className="phase5-dashboard-shortcuts student phase6-dashboard-shortcuts">
+        <Link href="/student/communication"><MessageCircleMore size={24} /><div><span className="phase-panel-kicker">COMMUNICATION</span><strong>ประกาศและข้อความ</strong><p>ติดตามข่าวสารและติดต่อครูผู้สอน</p></div><em>{communicationCounts.totalUnread} ใหม่</em><ArrowRight size={18} /></Link>
         <Link href="/student/attendance"><CalendarCheck2 size={24} /><div><span className="phase-panel-kicker">ATTENDANCE</span><strong>เช็กชื่อและประวัติการเข้าเรียน</strong><p>กรอกรหัสเช็กชื่อและดูสถานะรายคาบ</p></div><em>{attendance.attendedSessions}/{attendance.totalSessions} คาบ</em><ArrowRight size={18} /></Link>
         <Link href="/student/grades"><Percent size={24} /><div><span className="phase-panel-kicker">MY GRADES</span><strong>คะแนนและผลการเรียน</strong><p>ดูคะแนนรายรายการ หมวดคะแนน และผลรวม</p></div><em>{grades.filter((row) => row.publish_final_grade).length} วิชาเผยแพร่ผล</em><ArrowRight size={18} /></Link>
       </div>

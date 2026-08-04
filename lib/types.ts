@@ -590,3 +590,123 @@ export type StudentCourseGrade = {
     feedback: string | null;
   }>;
 };
+
+export type AnnouncementStatus = "draft" | "published" | "archived";
+export type CommunicationPriority = "normal" | "important" | "urgent";
+export type ConversationStatus = "active" | "closed" | "archived";
+export type MessageKind = "text" | "system";
+
+export type AnnouncementRow = {
+  id: string;
+  class_id: string;
+  author_id: string;
+  title: string;
+  body: string;
+  priority: CommunicationPriority;
+  status: AnnouncementStatus;
+  publish_at: string | null;
+  expires_at: string | null;
+  is_pinned: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
+export type AnnouncementAttachmentRow = {
+  id: string;
+  announcement_id: string;
+  storage_path: string | null;
+  external_url: string | null;
+  file_name: string | null;
+  mime_type: string | null;
+  file_size: number | null;
+  created_at: string;
+  signed_url?: string | null;
+};
+
+export type AnnouncementSummary = AnnouncementRow & {
+  class_code: string;
+  subject_name: string;
+  class_name: string;
+  author_name: string;
+  read_count: number;
+  recipient_count: number;
+  is_read: boolean;
+  attachment_count: number;
+};
+
+export type ConversationRow = {
+  id: string;
+  class_id: string;
+  subject: string;
+  created_by: string;
+  status: ConversationStatus;
+  last_message_at: string;
+  created_at: string;
+  updated_at: string;
+};
+
+export type ConversationParticipantRow = {
+  conversation_id: string;
+  user_id: string;
+  joined_at: string;
+  last_read_at: string | null;
+  is_muted: boolean;
+};
+
+export type MessageRow = {
+  id: string;
+  conversation_id: string;
+  sender_id: string;
+  message_kind: MessageKind;
+  body: string;
+  reply_to_id: string | null;
+  edited_at: string | null;
+  deleted_at: string | null;
+  created_at: string;
+};
+
+export type MessageAttachmentRow = {
+  id: string;
+  message_id: string;
+  storage_path: string;
+  file_name: string;
+  mime_type: string | null;
+  file_size: number | null;
+  created_at: string;
+  signed_url?: string | null;
+};
+
+export type ConversationSummary = ConversationRow & {
+  class_code: string;
+  subject_name: string;
+  class_name: string;
+  participant_names: string[];
+  latest_message: string | null;
+  latest_sender_id: string | null;
+  unread_count: number;
+};
+
+export type ConversationMessage = MessageRow & {
+  sender_name: string;
+  sender_role: AppRole;
+  attachments: MessageAttachmentRow[];
+};
+
+export type ConversationDetail = {
+  conversation: ConversationRow & {
+    class_code: string;
+    subject_name: string;
+    class_name: string;
+  };
+  participants: Array<ConversationParticipantRow & {
+    display_name: string;
+    role: AppRole;
+  }>;
+  messages: ConversationMessage[];
+};
+
+export type CommunicationCounts = {
+  unreadAnnouncements: number;
+  unreadMessages: number;
+  totalUnread: number;
+};

@@ -1,6 +1,6 @@
 {
-  "name": "tk-mooc-phase5",
-  "version": "5.0.0",
+  "name": "tk-mooc-phase6",
+  "version": "6.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -13,7 +13,8 @@
     "seed-phase2": "node --env-file=.env.local scripts/seed-phase2-demo.mjs",
     "seed-phase3": "node --env-file=.env.local scripts/seed-phase3-demo.mjs",
     "seed-phase4": "node --env-file=.env.local scripts/seed-phase4-demo.mjs",
-    "seed-phase5": "node --env-file=.env.local scripts/seed-phase5-demo.mjs"
+    "seed-phase5": "node --env-file=.env.local scripts/seed-phase5-demo.mjs",
+    "seed-phase6": "node --env-file=.env.local scripts/seed-phase6-demo.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "latest",

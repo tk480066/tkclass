@@ -10,6 +10,7 @@ import {
   LayoutDashboard,
   LibraryBig,
   LogOut,
+  MessageCircleMore,
   School,
   UserRound,
 } from "lucide-react";
@@ -45,6 +46,7 @@ export function DashboardShell({
                 <Link href="/teacher/quizzes"><FileQuestion size={15} /> แบบทดสอบ</Link>
                 <Link href="/teacher/attendance"><CalendarCheck2 size={15} /> เช็กชื่อ</Link>
                 <Link href="/teacher/gradebook"><GraduationCap size={15} /> สมุดคะแนน</Link>
+                <Link href="/teacher/communication"><MessageCircleMore size={15} /> สื่อสาร</Link>
               </>
             ) : (
               <>
@@ -54,6 +56,7 @@ export function DashboardShell({
                 <Link href="/student/quizzes"><FileQuestion size={15} /> แบบทดสอบ</Link>
                 <Link href="/student/attendance"><CalendarCheck2 size={15} /> เช็กชื่อ</Link>
                 <Link href="/student/grades"><GraduationCap size={15} /> คะแนน</Link>
+                <Link href="/student/communication"><MessageCircleMore size={15} /> สื่อสาร</Link>
               </>
             )}
           </nav>
@@ -67,7 +70,7 @@ export function DashboardShell({
 
         <section className="dashboard-hero site-dashboard-hero phase3-dashboard-hero">
           <div className="dashboard-hero-copy">
-            <span className="dashboard-hero-kicker">TK MOOC · PHASE 5</span>
+            <span className="dashboard-hero-kicker">TK MOOC · PHASE 6</span>
             <h1>{title}</h1>
             <p>{description}</p>
             <div className="dashboard-hero-chip-row">
@@ -75,12 +78,13 @@ export function DashboardShell({
               <span><CheckCircle2 size={16} /> Assignments & Quizzes</span>
               <span><CheckCircle2 size={16} /> Attendance</span>
               <span><CheckCircle2 size={16} /> Gradebook</span>
+              <span><CheckCircle2 size={16} /> Communication</span>
             </div>
           </div>
           <div className="dashboard-hero-widget dashboard-phone-widget float-dashboard" aria-hidden="true">
-            <div className="dashboard-widget-title"><strong>Phase 5 readiness</strong><span><LayoutDashboard size={15} /></span></div>
+            <div className="dashboard-widget-title"><strong>Phase 6 readiness</strong><span><LayoutDashboard size={15} /></span></div>
             <div className="widget-progress phase4-widget-progress"><i /></div>
-            <div className="dashboard-widget-metrics"><div><strong>100%</strong><small>Attendance</small></div><div><strong>06</strong><small>Grade sources</small></div></div>
+            <div className="dashboard-widget-metrics"><div><strong>100%</strong><small>Communication</small></div><div><strong>02</strong><small>Channels</small></div></div>
           </div>
         </section>
 

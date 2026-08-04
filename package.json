@@ -1,6 +1,6 @@
 {
   "name": "tk-mooc-phase7",
-  "version": "7.0.1",
+  "version": "7.0.3",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -20,7 +20,8 @@
     "phase7:backup": "node --env-file=.env.local scripts/phase7/backup.mjs",
     "phase7:import": "node --env-file=.env.local scripts/phase7/import-csv.mjs",
     "phase7:maintenance": "node --env-file=.env.local scripts/phase7/set-maintenance.mjs",
-    "phase7:postflight": "node --env-file=.env.local scripts/phase7/postflight.mjs"
+    "phase7:postflight": "node --env-file=.env.local scripts/phase7/postflight.mjs",
+    "phase7:verify-admin": "node --env-file=.env.local scripts/phase7/verify-admin-login.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "latest",

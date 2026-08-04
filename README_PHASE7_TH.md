@@ -1,5 +1,18 @@
-# TK Mooc Phase 7 v7.0.1 — Full Cumulative Package
+# TK Mooc Phase 7 v7.0.2 — Full Cumulative Package
 
+## แก้ไข v7.0.2: เข้าสู่ระบบ Admin
+
+หน้า Login มีแท็บ `ผู้ดูแล` แยกจากครู และจะ Redirect ไป `/admin/launch` หลังตรวจสอบว่า `profiles.role = admin` และ `status = active`
+
+ตรวจบัญชี Admin ได้ด้วย:
+
+```bash
+npm run phase7:verify-admin -- \
+  --email=admin@school.ac.th \
+  --password='YOUR_STRONG_PASSWORD'
+```
+
+รายละเอียดเพิ่มเติมอยู่ใน `FIX_ADMIN_LOGIN_TH.md`
 > เวอร์ชันนี้รวมไฟล์แกนกลางจาก Phase 1–6 และไฟล์ Phase 7 ครบถ้วนแล้ว แก้ปัญหา `Module not found` ของ `lib/auth` และ `lib/supabase` ที่เกิดเมื่อใช้ Phase 7 v7.0.0 เป็นโครงการเดี่ยว
 
 # TK Mooc Phase 7 — ย้ายข้อมูลและเปิดใช้งาน
@@ -26,7 +39,7 @@ Phase 7 เป็นชุดเครื่องมือและหน้า
 ## ไฟล์สำคัญ
 
 ```text
-TK_Mooc_Phase7_v7.0.0/
+TK_Mooc_Phase7_v7.0.2/
 ├── app/
 │   ├── admin/launch/page.tsx
 │   ├── api/health/route.ts

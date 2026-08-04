@@ -7,6 +7,7 @@ const pkg = JSON.parse(fs.readFileSync(packagePath, "utf8"));
 pkg.scripts ??= {};
 Object.assign(pkg.scripts, {
   "phase7:create-admin": "node --env-file=.env.local scripts/phase7/create-admin.mjs",
+  "phase7:verify-admin": "node --env-file=.env.local scripts/phase7/verify-admin-login.mjs",
   "phase7:preflight": "node --env-file=.env.local scripts/phase7/preflight.mjs",
   "phase7:backup": "node --env-file=.env.local scripts/phase7/backup.mjs",
   "phase7:import": "node --env-file=.env.local scripts/phase7/import-csv.mjs",

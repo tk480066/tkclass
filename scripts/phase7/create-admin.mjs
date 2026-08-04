@@ -41,5 +41,20 @@ const { error: profileError } = await supabase.from("profiles").upsert({
 }, { onConflict: "id" });
 if (profileError) throw new Error(profileError.message);
 
+const { data: verifiedProfile, error: verifyError } = await supabase
+  .from("profiles")
+  .select("id, role, display_name, status")
+  .eq("id", user.id)
+  .single();
+if (verifyError || !verifiedProfile) {
+  throw new Error(verifyError?.message ?? "Unable to verify the admin profile");
+}
+if (verifiedProfile.role !== "admin" || verifiedProfile.status !== "active") {
+  throw new Error("Admin profile was created but its role/status is invalid");
+}
+
 console.log("Admin profile is ready.");
 console.log(`Email: ${email}`);
+console.log("Login tab: ผู้ดูแล");
+console.log("Destination: /admin/launch");
+console.log(`Verify: npm run phase7:verify-admin -- --email=${email} --password='YOUR_PASSWORD'`);

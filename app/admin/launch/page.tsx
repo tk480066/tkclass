@@ -17,13 +17,36 @@ import {
   toggleMaintenanceModeAction,
   updateDeploymentCheckAction,
 } from "@/app/phase7-actions";
+import { signOut } from "@/app/actions";
 import { requireRole } from "@/lib/auth/require-role";
 import { getPhase7LaunchDashboard } from "@/lib/data/phase7";
 
 export const metadata: Metadata = { title: "ศูนย์เปิดใช้งานระบบ" };
 
-export default async function LaunchCenterPage() {
+type LaunchPageProps = {
+  searchParams: Promise<{ saved?: string; error?: string }>;
+};
+
+function toBangkokDateTimeLocal(value: unknown) {
+  if (typeof value !== "string" || !value) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  const parts = new Intl.DateTimeFormat("sv-SE", {
+    timeZone: "Asia/Bangkok",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).formatToParts(date);
+  const map = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  return `${map.year}-${map.month}-${map.day}T${map.hour}:${map.minute}`;
+}
+
+export default async function LaunchCenterPage({ searchParams }: LaunchPageProps) {
   await requireRole("admin");
+  const feedback = await searchParams;
   const data = await getPhase7LaunchDashboard();
   const maintenance = Boolean(data.settingMap.maintenance_mode);
   const productionReady = Boolean(data.settingMap.production_ready);
@@ -39,11 +62,29 @@ export default async function LaunchCenterPage() {
               <h1 className="mt-3 text-3xl font-black tracking-tight md:text-5xl">ย้ายข้อมูลและเปิดใช้งาน TK Mooc</h1>
               <p className="mt-3 max-w-3xl text-blue-100">ตรวจสถานะฐานข้อมูล การย้ายข้อมูล การ Deploy และแผนย้อนกลับก่อนเปิดให้ครูและนักเรียนใช้งานจริง</p>
             </div>
-            <span className={`rounded-full px-4 py-2 text-sm font-bold ${productionReady ? "bg-emerald-400/20 text-emerald-100" : "bg-amber-300/20 text-amber-100"}`}>
-              {productionReady ? "พร้อมเปิดใช้งาน" : "กำลังเตรียมเปิดใช้งาน"}
-            </span>
+            <div className="flex flex-wrap items-center gap-3">
+              <span className={`rounded-full px-4 py-2 text-sm font-bold ${productionReady ? "bg-emerald-400/20 text-emerald-100" : "bg-amber-300/20 text-amber-100"}`}>
+                {productionReady ? "พร้อมเปิดใช้งาน" : "กำลังเตรียมเปิดใช้งาน"}
+              </span>
+              <form action={signOut}>
+                <button type="submit" className="rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-bold text-white transition hover:bg-white/20">
+                  ออกจากระบบ
+                </button>
+              </form>
+            </div>
           </div>
         </header>
+
+        {feedback.saved ? (
+          <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-4 font-bold text-emerald-800">
+            {feedback.saved}
+          </div>
+        ) : null}
+        {feedback.error ? (
+          <div className="rounded-2xl border border-rose-200 bg-rose-50 px-5 py-4 font-bold text-rose-800">
+            {feedback.error}
+          </div>
+        ) : null}
 
         <section className="grid gap-4 md:grid-cols-4">
           <Metric icon={<CheckCircle2 />} label="ผ่าน" value={data.metrics.passed} tone="emerald" />
@@ -86,7 +127,7 @@ export default async function LaunchCenterPage() {
           <form action={saveLaunchSettingsAction} className="mt-5 grid gap-4 md:grid-cols-2">
             <label className="grid gap-2 text-sm font-bold">ปีการศึกษา<input name="academicYear" defaultValue={String(data.settingMap.academic_year ?? 2569)} className="rounded-xl border border-slate-200 px-4 py-3 font-normal" /></label>
             <label className="grid gap-2 text-sm font-bold">ภาคเรียน<input name="semester" defaultValue={String(data.settingMap.semester ?? 1)} className="rounded-xl border border-slate-200 px-4 py-3 font-normal" /></label>
-            <label className="grid gap-2 text-sm font-bold">วันเวลาเปิดระบบ<input type="datetime-local" name="launchAt" className="rounded-xl border border-slate-200 px-4 py-3 font-normal" /></label>
+            <label className="grid gap-2 text-sm font-bold">วันเวลาเปิดระบบ<input type="datetime-local" name="launchAt" defaultValue={toBangkokDateTimeLocal(data.settingMap.launch_at)} className="rounded-xl border border-slate-200 px-4 py-3 font-normal" /></label>
             <label className="grid gap-2 text-sm font-bold">อีเมลผู้ดูแล<input type="email" name="supportEmail" defaultValue={String(data.settingMap.support_email ?? "")} className="rounded-xl border border-slate-200 px-4 py-3 font-normal" /></label>
             <label className="grid gap-2 text-sm font-bold md:col-span-2">ข้อความแจ้งเตือนส่วนกลาง<textarea name="announcementBanner" defaultValue={String(data.settingMap.announcement_banner ?? "")} rows={3} className="rounded-xl border border-slate-200 px-4 py-3 font-normal" /></label>
             <button className="rounded-xl bg-blue-600 px-5 py-3 font-bold text-white hover:bg-blue-700 md:col-span-2" type="submit">บันทึกค่าการเปิดใช้งาน</button>

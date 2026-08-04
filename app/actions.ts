@@ -3,12 +3,13 @@
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import type { AppRole } from "@/lib/types";
 
 export type AuthActionState = {
   error?: string;
 };
 
-const teacherSchema = z.object({
+const emailPasswordSchema = z.object({
   email: z.string().email("กรุณากรอกอีเมลให้ถูกต้อง"),
   password: z.string().min(8, "รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร"),
 });
@@ -18,11 +19,17 @@ const studentSchema = z.object({
   pin: z.string().min(6, "PIN ต้องมีอย่างน้อย 6 ตัวอักษร"),
 });
 
-export async function teacherSignIn(
-  _previousState: AuthActionState,
+const roleDestination: Record<AppRole, string> = {
+  admin: "/admin/launch",
+  teacher: "/teacher",
+  student: "/student",
+};
+
+async function emailRoleSignIn(
   formData: FormData,
+  expectedRole: "admin" | "teacher",
 ): Promise<AuthActionState> {
-  const parsed = teacherSchema.safeParse({
+  const parsed = emailPasswordSchema.safeParse({
     email: formData.get("email"),
     password: formData.get("password"),
   });
@@ -35,22 +42,43 @@ export async function teacherSignIn(
   const { data, error } = await supabase.auth.signInWithPassword(parsed.data);
 
   if (error || !data.user) {
-    console.error("Teacher sign-in failed:", error?.message ?? "No user returned");
+    console.error(`${expectedRole} sign-in failed:`, error?.message ?? "No user returned");
     return { error: "อีเมลหรือรหัสผ่านไม่ถูกต้อง" };
   }
 
-  const { data: profile } = await supabase
+  const { data: profile, error: profileError } = await supabase
     .from("profiles")
     .select("role, status")
     .eq("id", data.user.id)
     .single();
 
-  if (profile?.role !== "teacher" || profile.status !== "active") {
+  if (profileError || !profile) {
+    console.error(`${expectedRole} profile lookup failed:`, profileError?.message ?? "No profile returned");
     await supabase.auth.signOut();
-    return { error: "บัญชีนี้ไม่มีสิทธิ์เข้าใช้งานระบบครู" };
+    return { error: "พบบัญชีในระบบยืนยันตัวตน แต่ยังไม่มีโปรไฟล์ผู้ใช้งาน กรุณารันคำสั่งสร้างบัญชีอีกครั้ง" };
   }
 
-  redirect("/teacher");
+  if (profile.role !== expectedRole || profile.status !== "active") {
+    await supabase.auth.signOut();
+    const label = expectedRole === "admin" ? "ผู้ดูแลระบบ" : "ครู";
+    return { error: `บัญชีนี้ไม่มีสิทธิ์เข้าใช้งานในสถานะ${label} หรือถูกปิดใช้งาน` };
+  }
+
+  redirect(roleDestination[expectedRole]);
+}
+
+export async function adminSignIn(
+  _previousState: AuthActionState,
+  formData: FormData,
+): Promise<AuthActionState> {
+  return emailRoleSignIn(formData, "admin");
+}
+
+export async function teacherSignIn(
+  _previousState: AuthActionState,
+  formData: FormData,
+): Promise<AuthActionState> {
+  return emailRoleSignIn(formData, "teacher");
 }
 
 export async function studentSignIn(
@@ -78,18 +106,24 @@ export async function studentSignIn(
     return { error: "รหัสนักเรียนหรือ PIN ไม่ถูกต้อง" };
   }
 
-  const { data: profile } = await supabase
+  const { data: profile, error: profileError } = await supabase
     .from("profiles")
     .select("role, status")
     .eq("id", data.user.id)
     .single();
 
-  if (profile?.role !== "student" || profile.status !== "active") {
+  if (profileError || !profile) {
+    console.error("Student profile lookup failed:", profileError?.message ?? "No profile returned");
     await supabase.auth.signOut();
-    return { error: "บัญชีนี้ไม่มีสิทธิ์เข้าใช้งานระบบนักเรียน" };
+    return { error: "พบบัญชีในระบบยืนยันตัวตน แต่ยังไม่มีโปรไฟล์นักเรียน" };
   }
 
-  redirect("/student");
+  if (profile.role !== "student" || profile.status !== "active") {
+    await supabase.auth.signOut();
+    return { error: "บัญชีนี้ไม่มีสิทธิ์เข้าใช้งานระบบนักเรียน หรือถูกปิดใช้งาน" };
+  }
+
+  redirect(roleDestination.student);
 }
 
 export async function signOut() {

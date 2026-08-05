@@ -117,3 +117,21 @@ export async function getHomepageSectionsDashboard(){
   if(error) throw new Error(`โหลด Section ไม่สำเร็จ: ${error.message} กรุณารัน Migration Phase 8.2`);
   return (data??[]) as SiteHomepageSection[];
 }
+
+export type SiteNewsItem={id:string;title:string;summary:string;content:string;image_path:string|null;external_url:string|null;published_at:string;expires_at:string|null;is_pinned:boolean;is_visible:boolean;display_order:number};
+export type SiteEventItem={id:string;title:string;description:string;location:string;start_at:string;end_at:string|null;registration_url:string|null;accent_color:string;is_visible:boolean;display_order:number};
+export type SiteStatItem={id:string;stat_key:string;label:string;value_mode:string;manual_value:number;suffix:string;icon_name:string;is_visible:boolean;display_order:number;resolved_value?:number};
+export type SiteRelatedLink={id:string;title:string;description:string;url:string;icon_name:string;image_path:string|null;open_new_tab:boolean;is_visible:boolean;display_order:number};
+
+export async function getPhase83PublicContent(){
+  try{const supabase=await createClient();const now=new Date().toISOString();const [news,events,stats,links]=await Promise.all([
+    supabase.from('site_news_items').select('*').eq('is_visible',true).lte('published_at',now).or(`expires_at.is.null,expires_at.gt.${now}`).order('is_pinned',{ascending:false}).order('display_order').order('published_at',{ascending:false}).limit(6),
+    supabase.from('site_events').select('*').eq('is_visible',true).gte('start_at',new Date(Date.now()-86400000).toISOString()).order('start_at').order('display_order').limit(8),
+    supabase.from('site_stat_items').select('*').eq('is_visible',true).order('display_order'),
+    supabase.from('site_related_links').select('*').eq('is_visible',true).order('display_order'),
+  ]);if(news.error||events.error||stats.error||links.error)throw new Error('phase83 unavailable');
+  const statRows=(stats.data??[]) as SiteStatItem[];const counts:Record<string,number>={};for(const mode of new Set(statRows.map(s=>s.value_mode).filter(m=>m!=='manual'))){const table=mode==='courses'?'classes':mode==='teachers'?'teacher_profiles':mode==='students'?'student_profiles':mode==='lessons'?'lessons':'classes';const {count}=await supabase.from(table).select('*',{count:'exact',head:true});counts[mode]=count??0}
+  return {news:(news.data??[]) as SiteNewsItem[],events:(events.data??[]) as SiteEventItem[],stats:statRows.map(s=>({...s,resolved_value:s.value_mode==='manual'?s.manual_value:(counts[s.value_mode]??0)})),links:(links.data??[]) as SiteRelatedLink[]};
+  }catch{return {news:[] as SiteNewsItem[],events:[] as SiteEventItem[],stats:[] as SiteStatItem[],links:[] as SiteRelatedLink[]};}
+}
+export async function getPhase83AdminData(table:'site_news_items'|'site_events'|'site_stat_items'|'site_related_links'){const supabase=await createClient();const {data,error}=await supabase.from(table).select('*').order('display_order').order('created_at');if(error)throw new Error(`${error.message} กรุณารัน Migration Phase 8.3`);return data??[]}

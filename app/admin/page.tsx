@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BarChart3, CalendarDays, Database, Eye, Layers3, LayoutDashboard, Link2, Megaphone, Rocket } from "lucide-react";
+import { BarChart3, CalendarDays, Database, Eye, Layers3, LayoutDashboard, Link2, Megaphone, Rocket, ShieldCheck } from "lucide-react";
 import { signOut } from "@/app/actions";
 import { requireRole } from "@/lib/auth/require-role";
 
@@ -44,10 +44,11 @@ export default async function AdminIndexPage() {
           <Link href="/admin/content/events" className="group rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-xl"><span className="grid h-14 w-14 place-items-center rounded-2xl bg-emerald-50 text-emerald-700"><CalendarDays /></span><h2 className="mt-5 text-2xl font-black">กิจกรรม</h2><p className="mt-2 leading-7 text-slate-500">จัดการวันเวลา สถานที่ และลิงก์ลงทะเบียนกิจกรรม</p></Link>
           <Link href="/admin/content/statistics" className="group rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-xl"><span className="grid h-14 w-14 place-items-center rounded-2xl bg-violet-50 text-violet-700"><BarChart3 /></span><h2 className="mt-5 text-2xl font-black">สถิติ</h2><p className="mt-2 leading-7 text-slate-500">เลือกตัวเลขอัตโนมัติจากฐานข้อมูลหรือกำหนดค่าเอง</p></Link>
           <Link href="/admin/content/links" className="group rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-xl"><span className="grid h-14 w-14 place-items-center rounded-2xl bg-cyan-50 text-cyan-700"><Link2 /></span><h2 className="mt-5 text-2xl font-black">ลิงก์ที่เกี่ยวข้อง</h2><p className="mt-2 leading-7 text-slate-500">เพิ่มคู่มือ เว็บไซต์ และช่องทางสนับสนุนบนหน้าหลัก</p></Link>
+          <Link href="/admin/quality" className="group rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-xl"><span className="grid h-14 w-14 place-items-center rounded-2xl bg-rose-50 text-rose-700"><ShieldCheck /></span><h2 className="mt-5 text-2xl font-black">ตรวจคุณภาพ Production</h2><p className="mt-2 leading-7 text-slate-500">ตรวจ Responsive, RLS, Policies, Storage และความพร้อมก่อนเปิดใช้งานจริง</p></Link>
         </section>
 
         <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-          <div className="flex items-center gap-3"><Database className="text-blue-600" /><div><h2 className="text-xl font-black">สถานะโครงการ</h2><p className="text-sm text-slate-500">Phase 8.3 · News, Events, Statistics & Related Links</p></div></div>
+          <div className="flex items-center gap-3"><Database className="text-blue-600" /><div><h2 className="text-xl font-black">สถานะโครงการ</h2><p className="text-sm text-slate-500">Phase 8.5 · Responsive, RLS & Production Readiness</p></div></div>
         </section>
       </div>
     </main>

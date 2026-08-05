@@ -1,6 +1,6 @@
 {
-  "name": "tk-mooc-phase8-4",
-  "version": "8.4.0",
+  "name": "tk-mooc-phase8-5",
+  "version": "8.5.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -21,7 +21,11 @@
     "phase7:import": "node --env-file=.env.local scripts/phase7/import-csv.mjs",
     "phase7:maintenance": "node --env-file=.env.local scripts/phase7/set-maintenance.mjs",
     "phase7:postflight": "node --env-file=.env.local scripts/phase7/postflight.mjs",
-    "phase7:verify-admin": "node --env-file=.env.local scripts/phase7/verify-admin-login.mjs"
+    "phase7:verify-admin": "node --env-file=.env.local scripts/phase7/verify-admin-login.mjs",
+    "phase85:responsive": "node scripts/phase85/responsive-audit.mjs",
+    "phase85:rls": "node --env-file=.env.local scripts/phase85/rls-audit.mjs",
+    "phase85:production": "node --env-file=.env.local scripts/phase85/production-audit.mjs",
+    "phase85:quality": "npm run phase85:responsive && npm run typecheck && npm run build"
   },
   "dependencies": {
     "@supabase/ssr": "latest",

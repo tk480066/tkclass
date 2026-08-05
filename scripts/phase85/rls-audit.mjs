@@ -1,0 +1,11 @@
+import { createClient } from "@supabase/supabase-js";
+const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const key = process.env.SUPABASE_SECRET_KEY;
+if (!url || !key) throw new Error("Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SECRET_KEY");
+const supabase = createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
+const { data, error } = await supabase.rpc("phase85_readiness_report");
+if (error) throw new Error(error.message);
+console.log(JSON.stringify(data, null, 2));
+const hardFailures = [...data.missing_tables, ...data.rls_disabled, ...data.tables_without_policies, ...data.missing_buckets];
+if (hardFailures.length || data.deployment_failed > 0) process.exit(1);
+console.log("✅ RLS and schema readiness passed");

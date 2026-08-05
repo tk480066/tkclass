@@ -74,6 +74,9 @@ export default async function HomepageCmsPage({ searchParams }: HomepageCmsPageP
               </p>
             </div>
             <div className="flex flex-wrap gap-2">
+              <Link href="/admin" className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-bold transition hover:bg-white/20">
+                <ArrowLeft size={16} /> ศูนย์ผู้ดูแลระบบ
+              </Link>
               <Link href="/admin/launch" className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-bold transition hover:bg-white/20">
                 <ArrowLeft size={16} /> ศูนย์เปิดใช้งาน
               </Link>

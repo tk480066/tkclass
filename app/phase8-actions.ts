@@ -483,3 +483,132 @@ export async function deleteNavigationItemAction(formData: FormData) {
   if (failure) feedbackRedirect("error", failure, "navigation");
   feedbackRedirect("saved", "ลบเมนูแล้ว", "navigation");
 }
+
+const sectionTypeSchema = z.enum(["hero", "roles", "news", "calendar", "links", "custom_text", "cta"]);
+const sectionBackgroundSchema = z.enum(["default", "soft", "blue", "dark"]);
+const homepageSectionSchema = z.object({
+  id: z.union([z.literal(""), z.string().uuid()]),
+  sectionKey: z.string().min(1).max(80).regex(/^[a-z0-9_-]+$/, "คีย์ Section ใช้ได้เฉพาะ a-z, 0-9, _ และ -"),
+  sectionType: sectionTypeSchema,
+  eyebrow: z.string().max(100),
+  title: z.string().min(1, "กรุณาระบุชื่อ Section").max(180),
+  description: z.string().max(800),
+  body: z.string().max(5000),
+  buttonLabel: z.string().max(80),
+  buttonUrl: hrefSchema,
+  displayOrder: z.coerce.number().int().min(0).max(9999),
+  isVisible: z.boolean(),
+  backgroundStyle: sectionBackgroundSchema,
+});
+
+function sectionFeedbackRedirect(kind: "saved" | "error", message: string): never {
+  const params = new URLSearchParams({ [kind]: message });
+  redirect(`/admin/content/sections?${params.toString()}`);
+}
+
+function refreshSections() {
+  revalidatePath("/");
+  revalidatePath("/admin/content/sections");
+  revalidatePath("/admin/content/homepage");
+}
+
+export async function saveHomepageSectionAction(formData: FormData) {
+  const parsed = homepageSectionSchema.safeParse({
+    id: text(formData, "id"),
+    sectionKey: text(formData, "sectionKey"),
+    sectionType: text(formData, "sectionType"),
+    eyebrow: text(formData, "eyebrow"),
+    title: text(formData, "title"),
+    description: text(formData, "description"),
+    body: text(formData, "body"),
+    buttonLabel: text(formData, "buttonLabel"),
+    buttonUrl: text(formData, "buttonUrl"),
+    displayOrder: text(formData, "displayOrder"),
+    isVisible: checked(formData, "isVisible"),
+    backgroundStyle: text(formData, "backgroundStyle"),
+  });
+  if (!parsed.success) sectionFeedbackRedirect("error", parsed.error.issues[0]?.message ?? "ข้อมูล Section ไม่ถูกต้อง");
+
+  try {
+    const { user, supabase } = await requireAdmin();
+    const payload = {
+      site_key: "main",
+      section_key: parsed.data.sectionKey,
+      section_type: parsed.data.sectionType,
+      eyebrow: parsed.data.eyebrow,
+      title: parsed.data.title,
+      description: parsed.data.description,
+      body: parsed.data.body,
+      button_label: parsed.data.buttonLabel,
+      button_url: parsed.data.buttonUrl,
+      display_order: parsed.data.displayOrder,
+      is_visible: parsed.data.isVisible,
+      background_style: parsed.data.backgroundStyle,
+      updated_by: user.id,
+    };
+    if (parsed.data.id) {
+      const { error } = await supabase.from("site_homepage_sections").update(payload).eq("id", parsed.data.id);
+      if (error) throw new Error(`แก้ไข Section ไม่สำเร็จ: ${error.message}`);
+    } else {
+      const { error } = await supabase.from("site_homepage_sections").insert({ ...payload, is_system: false });
+      if (error) throw new Error(`เพิ่ม Section ไม่สำเร็จ: ${error.message}`);
+    }
+    await recordAudit(supabase, parsed.data.id ? "homepage_section_updated" : "homepage_section_created", {
+      section_id: parsed.data.id || null,
+      section_key: parsed.data.sectionKey,
+      section_type: parsed.data.sectionType,
+    });
+    refreshSections();
+  } catch (error) {
+    sectionFeedbackRedirect("error", errorMessage(error, "บันทึก Section ไม่สำเร็จ"));
+  }
+  sectionFeedbackRedirect("saved", parsed.data.id ? "แก้ไข Section และเผยแพร่แล้ว" : "เพิ่ม Section และเผยแพร่แล้ว");
+}
+
+export async function moveHomepageSectionAction(formData: FormData) {
+  const id = text(formData, "id");
+  const direction = text(formData, "direction");
+  if (!z.string().uuid().safeParse(id).success || !["up", "down"].includes(direction)) {
+    sectionFeedbackRedirect("error", "ข้อมูลการย้าย Section ไม่ถูกต้อง");
+  }
+  try {
+    const { user, supabase } = await requireAdmin();
+    const { data, error } = await supabase.from("site_homepage_sections").select("id, display_order, created_at").eq("site_key", "main").order("display_order").order("created_at");
+    if (error) throw new Error(error.message);
+    const rows = data ?? [];
+    const index = rows.findIndex((row) => row.id === id);
+    const swapIndex = direction === "up" ? index - 1 : index + 1;
+    if (index < 0 || swapIndex < 0 || swapIndex >= rows.length) sectionFeedbackRedirect("saved", "Section อยู่ตำแหน่งสุดแล้ว");
+    const current = rows[index]; const other = rows[swapIndex];
+    const temporary = 9999;
+    const first = await supabase.from("site_homepage_sections").update({ display_order: temporary, updated_by: user.id }).eq("id", current.id);
+    if (first.error) throw new Error(first.error.message);
+    const second = await supabase.from("site_homepage_sections").update({ display_order: current.display_order, updated_by: user.id }).eq("id", other.id);
+    if (second.error) throw new Error(second.error.message);
+    const third = await supabase.from("site_homepage_sections").update({ display_order: other.display_order, updated_by: user.id }).eq("id", current.id);
+    if (third.error) throw new Error(third.error.message);
+    await recordAudit(supabase, "homepage_section_moved", { section_id: id, direction });
+    refreshSections();
+  } catch (error) {
+    sectionFeedbackRedirect("error", errorMessage(error, "ย้าย Section ไม่สำเร็จ"));
+  }
+  sectionFeedbackRedirect("saved", direction === "up" ? "เลื่อน Section ขึ้นแล้ว" : "เลื่อน Section ลงแล้ว");
+}
+
+export async function deleteHomepageSectionAction(formData: FormData) {
+  const id = text(formData, "id");
+  if (!z.string().uuid().safeParse(id).success) sectionFeedbackRedirect("error", "รหัส Section ไม่ถูกต้อง");
+  try {
+    const { supabase } = await requireAdmin();
+    const { data, error: readError } = await supabase.from("site_homepage_sections").select("is_system, section_key").eq("id", id).single();
+    if (readError) throw new Error(readError.message);
+    if (data?.is_system) throw new Error("Section หลักของระบบลบไม่ได้ แต่สามารถซ่อนได้");
+    const { error } = await supabase.from("site_homepage_sections").delete().eq("id", id);
+    if (error) throw new Error(error.message);
+    await recordAudit(supabase, "homepage_section_deleted", { section_id: id, section_key: data?.section_key });
+    refreshSections();
+  } catch (error) {
+    sectionFeedbackRedirect("error", errorMessage(error, "ลบ Section ไม่สำเร็จ"));
+  }
+  sectionFeedbackRedirect("saved", "ลบ Section แล้ว");
+}

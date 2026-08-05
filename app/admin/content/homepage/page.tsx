@@ -67,7 +67,7 @@ export default async function HomepageCmsPage({ searchParams }: HomepageCmsPageP
         <header className="overflow-hidden rounded-3xl bg-gradient-to-br from-slate-950 via-blue-900 to-sky-500 p-7 text-white shadow-xl">
           <div className="flex flex-wrap items-start justify-between gap-5">
             <div>
-              <span className="text-xs font-black tracking-[0.22em] text-blue-100">PHASE 8.1 · HOMEPAGE CMS</span>
+              <span className="text-xs font-black tracking-[0.22em] text-blue-100">PHASE 8.2 · HOMEPAGE CMS</span>
               <h1 className="mt-3 text-3xl font-black tracking-tight md:text-5xl">จัดการ Header, Hero และ Footer</h1>
               <p className="mt-3 max-w-3xl leading-7 text-blue-100">
                 แก้ไขข้อความ เมนู โลโก้ ภาพ Hero ปุ่ม และข้อมูลติดต่อ โดยข้อมูลที่บันทึกจะเผยแพร่บนหน้าหลักทันที
@@ -77,6 +77,7 @@ export default async function HomepageCmsPage({ searchParams }: HomepageCmsPageP
               <Link href="/admin/launch" className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-bold transition hover:bg-white/20">
                 <ArrowLeft size={16} /> ศูนย์เปิดใช้งาน
               </Link>
+              <Link href="/admin/content/sections" className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-bold transition hover:bg-white/20">จัดการ Section</Link>
               <Link href="/" target="_blank" className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-bold transition hover:bg-white/20">
                 <Eye size={16} /> เปิดหน้าหลัก
               </Link>

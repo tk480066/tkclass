@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Database, Eye, LayoutDashboard, Rocket } from "lucide-react";
+import { Database, Eye, Layers3, LayoutDashboard, Rocket } from "lucide-react";
 import { signOut } from "@/app/actions";
 import { requireRole } from "@/lib/auth/require-role";
 
@@ -23,7 +23,7 @@ export default async function AdminIndexPage() {
           </div>
         </header>
 
-        <section className="grid gap-5 md:grid-cols-2">
+        <section className="grid gap-5 md:grid-cols-3">
           <Link href="/admin/launch" className="group rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
             <span className="grid h-14 w-14 place-items-center rounded-2xl bg-blue-50 text-blue-700"><Rocket /></span>
             <h2 className="mt-5 text-2xl font-black">ศูนย์เปิดใช้งานระบบ</h2>
@@ -34,10 +34,15 @@ export default async function AdminIndexPage() {
             <h2 className="mt-5 text-2xl font-black">จัดการหน้าหลัก</h2>
             <p className="mt-2 leading-7 text-slate-500">แก้ไข Header เมนู Hero รูปภาพ ปุ่ม Footer และข้อมูลติดต่อโดยไม่ต้องแก้โค้ด</p>
           </Link>
+          <Link href="/admin/content/sections" className="group rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
+            <span className="grid h-14 w-14 place-items-center rounded-2xl bg-indigo-50 text-indigo-700"><Layers3 /></span>
+            <h2 className="mt-5 text-2xl font-black">จัดการ Section</h2>
+            <p className="mt-2 leading-7 text-slate-500">เรียงลำดับ ซ่อน แสดง แก้ไขหัวข้อ และเพิ่ม Section ข้อความหรือ Call to Action</p>
+          </Link>
         </section>
 
         <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-          <div className="flex items-center gap-3"><Database className="text-blue-600" /><div><h2 className="text-xl font-black">สถานะโครงการ</h2><p className="text-sm text-slate-500">Phase 8.1 · Homepage CMS</p></div></div>
+          <div className="flex items-center gap-3"><Database className="text-blue-600" /><div><h2 className="text-xl font-black">สถานะโครงการ</h2><p className="text-sm text-slate-500">Phase 8.2 · Sections & Ordering</p></div></div>
         </section>
       </div>
     </main>

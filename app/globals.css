@@ -2014,3 +2014,20 @@ html[data-theme="dark"] .phase5-warning-card { background: #392f18 !important; }
   .hero-image-zone { min-height: 27rem; margin-top: 1rem; }
   .hero-image-frame { inset: 1rem 4% 2.2rem; border-width: .45rem; border-radius: 1.6rem; }
 }
+
+/* Phase 8.2 — Homepage section ordering and custom sections */
+.section-style-soft { background: linear-gradient(180deg, rgba(239,246,255,.72), rgba(255,255,255,.96)); }
+.section-style-blue { background: linear-gradient(135deg, #dbeafe, #eff6ff 48%, #ffffff); }
+.section-style-dark { background: linear-gradient(135deg, #020617, #0f172a 55%, #1e3a8a); color: #fff; }
+.section-style-dark .section-title h2,
+.section-style-dark .section-title p,
+.section-style-dark .section-title span { color: #fff; }
+.phase82-custom-section { position: relative; }
+.phase82-custom-card { max-width: 980px; margin: 0 auto; padding: clamp(1.5rem, 4vw, 3rem); border: 1px solid rgba(148,163,184,.24); border-radius: 2rem; background: rgba(255,255,255,.86); box-shadow: 0 24px 70px rgba(15,23,42,.08); text-align: center; }
+.section-style-dark .phase82-custom-card { background: rgba(15,23,42,.72); border-color: rgba(255,255,255,.15); }
+.phase82-body { max-width: 760px; margin: -1rem auto 1.5rem; white-space: pre-line; line-height: 1.85; color: var(--muted); }
+.section-style-dark .phase82-body { color: #dbeafe; }
+.phase82-custom-card .button-primary,
+.phase82-custom-card .button-secondary { display: inline-flex; }
+.input { width: 100%; border: 1px solid #cbd5e1; border-radius: .85rem; background: #fff; padding: .75rem .9rem; font-weight: 500; outline: none; }
+.input:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,.12); }

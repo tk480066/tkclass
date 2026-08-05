@@ -1,0 +1,4 @@
+import { createClient } from "@/lib/supabase/server";
+export const ENTITIES=[["homepage","site_homepage_settings","Header / Hero / Footer"],["navigation","site_navigation_items","เมนูหลัก"],["sections","site_homepage_sections","Section"],["news","site_news_items","ข่าว"],["events","site_events","กิจกรรม"],["statistics","site_stat_items","สถิติ"],["links","site_related_links","ลิงก์"]] as const;
+export async function getPublishingDashboard(){const s=await createClient();const groups=[] as any[];for(const [type,table,label] of ENTITIES){const {data,error}=await s.from(table).select("*").order("updated_at",{ascending:false});if(error)throw new Error(error.message);groups.push({type,label,rows:data??[]})}return groups}
+export async function getRevisionHistory(){const s=await createClient();const {data,error}=await s.from("site_content_revisions").select("*").order("created_at",{ascending:false}).limit(200);if(error)throw new Error(error.message);return data??[]}

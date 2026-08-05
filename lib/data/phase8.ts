@@ -82,13 +82,15 @@ function isSettingsRow(value:unknown): value is SiteHomepageSettingsRow {
   return typeof row.header_site_name==="string"&&typeof row.hero_title_primary==="string";
 }
 
-export async function getHomepagePublicContent():Promise<HomepagePublicContent>{
+export async function getHomepagePublicContent(preview=false):Promise<HomepagePublicContent>{
   try{
     const supabase=await createClient();
+    const now=new Date().toISOString();
+    const statusFilter=`publish_status.eq.published,and(publish_status.eq.scheduled,scheduled_at.lte.${now})`;
     const [settingsResult,navigationResult,sectionsResult]=await Promise.all([
       supabase.from("site_homepage_settings").select("*").eq("site_key","main").maybeSingle(),
-      supabase.from("site_navigation_items").select("*").eq("location","header").eq("is_visible",true).order("display_order").order("created_at"),
-      supabase.from("site_homepage_sections").select("*").eq("site_key","main").eq("is_visible",true).order("display_order").order("created_at"),
+      supabase.from("site_navigation_items").select("*").eq("location","header").eq("is_visible",true).or(preview?"publish_status.in.(draft,scheduled,published)":statusFilter).order("display_order").order("created_at"),
+      supabase.from("site_homepage_sections").select("*").eq("site_key","main").eq("is_visible",true).or(preview?"publish_status.in.(draft,scheduled,published)":statusFilter).order("display_order").order("created_at"),
     ]);
     if(settingsResult.error||navigationResult.error||sectionsResult.error||!isSettingsRow(settingsResult.data)) throw new Error("Homepage unavailable");
     const settings=settingsResult.data as SiteHomepageSettingsRow;
@@ -123,12 +125,12 @@ export type SiteEventItem={id:string;title:string;description:string;location:st
 export type SiteStatItem={id:string;stat_key:string;label:string;value_mode:string;manual_value:number;suffix:string;icon_name:string;is_visible:boolean;display_order:number;resolved_value?:number};
 export type SiteRelatedLink={id:string;title:string;description:string;url:string;icon_name:string;image_path:string|null;open_new_tab:boolean;is_visible:boolean;display_order:number};
 
-export async function getPhase83PublicContent(){
-  try{const supabase=await createClient();const now=new Date().toISOString();const [news,events,stats,links]=await Promise.all([
-    supabase.from('site_news_items').select('*').eq('is_visible',true).lte('published_at',now).or(`expires_at.is.null,expires_at.gt.${now}`).order('is_pinned',{ascending:false}).order('display_order').order('published_at',{ascending:false}).limit(6),
-    supabase.from('site_events').select('*').eq('is_visible',true).gte('start_at',new Date(Date.now()-86400000).toISOString()).order('start_at').order('display_order').limit(8),
-    supabase.from('site_stat_items').select('*').eq('is_visible',true).order('display_order'),
-    supabase.from('site_related_links').select('*').eq('is_visible',true).order('display_order'),
+export async function getPhase83PublicContent(preview=false){
+  try{const supabase=await createClient();const now=new Date().toISOString();const statusFilter=`publish_status.eq.published,and(publish_status.eq.scheduled,scheduled_at.lte.${now})`;const [news,events,stats,links]=await Promise.all([
+    supabase.from('site_news_items').select('*').eq('is_visible',true).or(preview?'publish_status.in.(draft,scheduled,published)':statusFilter).lte('published_at',now).or(`expires_at.is.null,expires_at.gt.${now}`).order('is_pinned',{ascending:false}).order('display_order').order('published_at',{ascending:false}).limit(6),
+    supabase.from('site_events').select('*').eq('is_visible',true).or(preview?'publish_status.in.(draft,scheduled,published)':statusFilter).gte('start_at',new Date(Date.now()-86400000).toISOString()).order('start_at').order('display_order').limit(8),
+    supabase.from('site_stat_items').select('*').eq('is_visible',true).or(preview?'publish_status.in.(draft,scheduled,published)':statusFilter).order('display_order'),
+    supabase.from('site_related_links').select('*').eq('is_visible',true).or(preview?'publish_status.in.(draft,scheduled,published)':statusFilter).order('display_order'),
   ]);if(news.error||events.error||stats.error||links.error)throw new Error('phase83 unavailable');
   const statRows=(stats.data??[]) as SiteStatItem[];const counts:Record<string,number>={};for(const mode of new Set(statRows.map(s=>s.value_mode).filter(m=>m!=='manual'))){const table=mode==='courses'?'classes':mode==='teachers'?'teacher_profiles':mode==='students'?'student_profiles':mode==='lessons'?'lessons':'classes';const {count}=await supabase.from(table).select('*',{count:'exact',head:true});counts[mode]=count??0}
   return {news:(news.data??[]) as SiteNewsItem[],events:(events.data??[]) as SiteEventItem[],stats:statRows.map(s=>({...s,resolved_value:s.value_mode==='manual'?s.manual_value:(counts[s.value_mode]??0)})),links:(links.data??[]) as SiteRelatedLink[]};

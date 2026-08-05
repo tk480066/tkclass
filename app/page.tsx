@@ -4,13 +4,14 @@ import { ArrowRight, BookOpenCheck, CalendarDays, ChevronLeft, ChevronRight, Cir
 import { ScrollReveal } from "@/components/scroll-reveal";
 import { SiteBrand } from "@/components/site-brand";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { getCurrentUser } from "@/lib/auth/require-role";
+import { getCurrentUser, requireRole } from "@/lib/auth/require-role";
 import { getHomepagePublicContent, getPhase83PublicContent, type SiteHomepageSection, type SiteNavigationIcon, type SiteNavigationItem } from "@/lib/data/phase8";
 
-export default async function HomePage(){
-  const [user,homepage,phase83]=await Promise.all([getCurrentUser(),getHomepagePublicContent(),getPhase83PublicContent()]);
+export default async function HomePage({searchParams}:{searchParams:Promise<{cmsPreview?:string}>}){
+  const query=await searchParams;const preview=query.cmsPreview==="1";if(preview)await requireRole("admin");
+  const [user,homepage,phase83]=await Promise.all([getCurrentUser(),getHomepagePublicContent(preview),getPhase83PublicContent(preview)]);
   const {settings}=homepage;
-  return <main className="site-page" id="home"><div className="site-ambient site-ambient-one"/><div className="site-ambient site-ambient-two"/>
+  return <main className="site-page" id="home">{preview?<div className="phase84-preview-banner">Preview Mode — เฉพาะผู้ดูแลระบบ</div>:null}<div className="site-ambient site-ambient-one"/><div className="site-ambient site-ambient-two"/>
     <header className="floating-header"><Link href="/" className="header-brand" aria-label={`${settings.header_site_name} หน้าหลัก`}><SiteBrand siteName={settings.header_site_name} tagline={settings.header_tagline} logoUrl={homepage.logoUrl} logoAlt={settings.header_logo_alt} showTagline={settings.header_show_tagline}/></Link><nav className="main-nav" aria-label="เมนูหลัก">{homepage.navigation.map(item=><NavigationLink key={item.id} item={item}/>)}</nav><div className="header-actions">{settings.header_show_theme_toggle?<ThemeToggle/>:null}<Link href={user?"/dashboard":"/login"} className="admin-button"><LogIn size={17}/>{user?settings.header_logged_in_label:settings.header_login_label}</Link></div></header>
     {homepage.sections.map(section=><HomepageSectionRenderer key={section.id} section={section} homepage={homepage} phase83={phase83}/>)}
     {settings.footer_is_visible?<footer className="site-footer"><div className="footer-glow"/><div className="footer-main"><div className="footer-brand"><SiteBrand siteName={settings.header_site_name} tagline={settings.header_tagline} logoUrl={homepage.logoUrl} logoAlt={settings.header_logo_alt} showTagline={settings.header_show_tagline}/><p>{settings.footer_description}</p></div><div><strong>{settings.footer_contact_heading}</strong>{settings.footer_contact_line_1?<p>{settings.footer_contact_line_1}</p>:null}{settings.footer_contact_line_2?<p>{settings.footer_contact_line_2}</p>:null}</div><div><strong>{settings.footer_social_heading}</strong><FooterLink label={settings.footer_facebook_label} href={settings.footer_facebook_url}/><FooterLink label={settings.footer_youtube_label} href={settings.footer_youtube_url}/><FooterLink label={settings.footer_line_label} href={settings.footer_line_url}/></div></div><div className="footer-bottom"><span>{settings.footer_copyright}</span>{settings.footer_technology?<span>{settings.footer_technology}</span>:null}</div></footer>:null}
